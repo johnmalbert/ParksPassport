@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hike Planner Login</title>
+    <title>Roadtrip Planner Login</title>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/fe0b1ed089.js"></script>
@@ -12,6 +12,10 @@
             width: 100%;
             display: inline-block;
             opacity: 75%;
+        }
+        .demo{
+            width: 75%;
+            margin: auto;
         }
     </style>
 
@@ -26,9 +30,16 @@
             </div>
             <div class="col-4 p-4 mt-5">
                 <h1 style="text-align: center; padding: 1rem;">Exiting User Login</h1>
-                    <form action="/register" method="post">
+                    <form action="/login" method="post">
                         <div class="form-group">
                             {% csrf_token %}
+                            {% if messages %}
+                            <ul class="messages">    
+                                {% for message in messages %}    
+                                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
                                 <input type="email" name = "email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
@@ -42,27 +53,31 @@
                             </div>              
                         </div>
                         <p style="text-align: center;">We will never email you.</p>
-                        <p style="text-align: center;"><a href="/login">Register New User?</a></p>
+                        <p style="text-align: center;"><a href="/">Register New User?</a></p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid text-center" style="background-color: #476118; height: 20rem;">
+    <div class="container-fluid text-center" style="background-color: #476118;">
         <div class="row mt-3">
             <div class="col m-5 bg-white">
-                <h1>Find a Hike</h1>
+                <h1>Choose a Park</h1>
+                <img class="demo" src="{% static 'park.jpg' %}" alt="maps image">
+
             </div>
             <div class="col m-5 bg-white">
                 <h1>Get Directions Instantly</h1>
+                <img class="demo" src="{% static 'directions.jpg' %}" alt="maps image">
             </div>
             <div class="col m-5 bg-white">
                 <h1>Check the Forecast</h1>
+                <img class="demo" src="{% static 'weather.jpg' %}" alt="maps image">
             </div>
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid p-5 h-100">
         <div class="card text-center">
             <div class="card-header">
               Notes about page

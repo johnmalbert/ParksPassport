@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hike Planner Login</title>
+    <title>Roadtrip Planner Login</title>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/fe0b1ed089.js"></script>
@@ -14,6 +14,10 @@
             width: 100%;
             display: inline-block;
             opacity: 75%;
+        }
+        li{
+            color: red;
+
         }
     </style>
 
@@ -31,6 +35,13 @@
                     <form action="/register" method="post">
                         <div class="form-group">
                             {% csrf_token %}
+                            {% if messages %}
+                            <ul class="messages">    
+                                {% for message in messages %}    
+                                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                             <div class="form-group">
                                 <label for="first_name">First Name</label>
                                 <input type="text" class="form-control" name="first_name" placeholder="Enter first name">
@@ -44,6 +55,10 @@
                                 <input type="email" name = "email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                             </div>
                             <div class="form-group">
+                                <label for="zipcode">Home Zipcode</label>
+                                <input type="number" class="form-control" name="zipcode" id="" placeholder="Enter Zip">
+                            </div>
+                            <div class="form-group">
                                 <label for="password">Password</label>
                                 <input type="password" name="password" class="form-control" id="password" placeholder="Passwords must be at least 8 characters">
                             </div>
@@ -55,23 +70,30 @@
                                 <button class="btn btn-primary">Register</button>
                             </div>              
                         </div>
-                        <p style="text-align: center;">We will never email you.</p>
                         <p style="text-align: center;"><a href="/userlogin">Already registered? Sign in.</a></p>
+                        <p style="text-align: center;"><a href="/register/data">Why Register?</a></p>
+                        {% if message %}
+                            <p style="text-align: center;">{{message}}</p>
+                        {% endif %}
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-fluid text-center" style="background-color: #476118; height: 20rem;">
+    <div class="container-fluid text-center" style="background-color: #476118;">
         <div class="row mt-3">
             <div class="col m-5 bg-white">
-                <h1>Find a Hike</h1>
+                <h1>Choose a Park</h1>
+                <img class="demo" src="{% static 'park.jpg' %}" alt="maps image">
+
             </div>
             <div class="col m-5 bg-white">
                 <h1>Get Directions Instantly</h1>
+                <img class="demo" src="{% static 'directions.jpg' %}" alt="maps image">
             </div>
             <div class="col m-5 bg-white">
                 <h1>Check the Forecast</h1>
+                <img class="demo" src="{% static 'weather.jpg' %}" alt="maps image">
             </div>
         </div>
     </div>
