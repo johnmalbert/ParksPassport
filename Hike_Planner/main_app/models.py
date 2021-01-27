@@ -37,3 +37,15 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
 #Hike Class....pull from API?
+
+class Park(models.Model):
+    name = models.CharField()
+    url = models.CharField()
+    desc = models.TextField()
+    long = models.CharField()
+    lat = models.CharField()
+    img_url = models.CharField()
+    parkCode = models.CharField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    

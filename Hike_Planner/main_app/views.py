@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Park
 from django.contrib import messages
 import bcrypt
 import requests
 import math
+from datetime import datetime
 
 # Create your views here.
 def index(request):
@@ -33,30 +34,35 @@ def login(request):
 
 def homepage(request):
     #get park info
-    user_str = "zion"
+    user_str = "deva"
     api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
     baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
     resp = requests.get(baseURL_nps)
     park_data = resp.json()
-    print(park_data['data'][0]['url'])
     park_name = park_data['data'][0]['fullName']
     park_url = park_data['data'][0]['url']
     park_desc = park_data['data'][0]['description']
     park_long = park_data['data'][0]['longitude']
     park_lat = park_data['data'][0]['latitude']
-    img_url = park_data['data'][0]['image'][0]
+    img_url = park_data['data'][0]['images'][0]['url']
+    print(img_url)
 
     lon =  park_long
     lat =  park_lat
     API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
 
-    # baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
-    # print(baseURL)
-    # response = requests.get(baseURL)
-    # weather_data = response.json()
-    # curr = weather_data['current']
-    # temp = math.floor(curr['temp'])
-    # cond = curr['weather'][0]['description']
+    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    response = requests.get(baseURL)
+    weather_data = response.json()
+    
+    curr = weather_data['current']
+    print(curr)
+    temp = math.floor(curr['temp'])
+    cond = curr['weather'][0]['description']
+    sunrise = datetime.fromtimestamp(curr['sunrise'])
+    sunset = datetime.fromtimestamp(curr['sunset'])
+    print("Sunrise: ",sunrise)
+    print("Sunset: ", sunset)
     context = {
         "this_user" : User.objects.get(id=request.session['userid']),
         "park_name" : park_name,
@@ -64,9 +70,12 @@ def homepage(request):
         "park_desc" : park_desc,
         "park_long" : park_long,
         "park_lat" : park_lat,
-        "park_img" : park_img
-        # "park_temp" : temp,
-        # "park_cond" : cond
+        "park_img" : img_url,
+        "park_temp" : temp,
+        "park_cond" : cond,
+        "img_url" : img_url,
+        "sunrise" : sunrise,
+        "sunset" : sunset
     }
     return render(request, "home.html", context)
 
@@ -104,10 +113,38 @@ def userlogin(request):
     #display login info
     return render(request, "user_login.html")
 
-def hike_finder(request):
+def parks(request):
     # perform hike api search
-    return render(request, "hike_finder.html")
+    return render(request, "parks.html")
 
 def logout(request):
     del request.session['userid']
     return redirect('/userlogin')
+
+def create_parks(request):
+    if (request.session['userid']) != 1:
+        return redirect('/parks')
+    parks_list = ['acad', 'arch', 'badl', 'bibe', 'bisc', 'blca', 'brca', 'cany', 'care', 'cave', 'chis', 'cong', 'crla', 
+    'cuva', 'deva', 'dena', 'drto', 'ever', 'gaar', 'jeff', 'glac', 'glba', 'grca', 'grte', 'grba', 'grsa', 'grsm', 'gumo', 
+    'hale', 'havo', 'hosp', 'indu', 'isro', 'jotr', 'katm', 'kefj', 'kova', 'lacl', 'lavo', 'maca', 'meve', 'mora', 'neri', 'noca',
+    'olym', 'pefo', 'pinn', 'redw', 'romo', 'sagu', 'kimo', 'shen', 'thro', 'viis', 'voya', 'whsa', 'wica', 'wrst', 'yell', 'yose', 'zion']
+    user_str = "yell"
+    api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
+    baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
+    resp = requests.get(baseURL_nps)
+    park_data = resp.json()
+
+    # for i in parks_list:
+    #     user_str = i
+    #     api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
+    #     baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
+    #     resp = requests.get(baseURL_nps)
+    #     park_data = resp.json()
+    #     park_name = park_data['data'][0]['fullName']
+    #     park_url = park_data['data'][0]['url']
+    #     park_desc = park_data['data'][0]['description']
+    #     park_long = park_data['data'][0]['longitude']
+    #     park_lat = park_data['data'][0]['latitude']
+    #     img_url = park_data['data'][0]['images'][0]['url']
+    #     print(park_name, park_url, park_lat, park_long, img_url)
+    return redirect('/parks')

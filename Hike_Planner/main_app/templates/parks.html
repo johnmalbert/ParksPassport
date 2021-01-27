@@ -49,7 +49,7 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Hike Planner</a>
-        <h1 style="text-align: center; color: white;">Welcome, {{this_user.first_name}}</h1>
+        <h1 style="text-align: center">Welcome, {{this_user.first_name}}</h1>
         <a href="/logout"><button class="btn btn-primary">Logout</button></a>
     </nav>
     <main>
@@ -57,31 +57,11 @@
             <div class="row">
                 <div class="col-6 p-3">
                     <h1 style="text-align: center">Welcome, {{this_user.first_name}}, Find a Park</h1>
-                    <h1>{{park_name}}</h1>
+                    <h1>Park Name: {{park_name}}</h1>
                     <img class="park_photo" src="{{img_url}}" alt="image from site">
                     <h1>Location: {{park_long}}, {{park_lat}}</h1>
                     <h5>Park Description: {{park_desc}}</h5>
                     <a href="{{park_url}}"><h1>More Information</h1></a>
-                    <a href="/parks"><button class="btn btn-success">Find a Park</button></a>
-                </div>
-                <div class="col-6 bg-light">
-
-                    <div class="col bg-warning p-5">
-                        <h1 style="text-align: center">Directions</h1>
-                        <iframe width="100%" height="450" frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{park_name}}&key=AIzaSyA-TYiadBnpAmSerXWahx5ccYNTRFQhI1E"
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                    <div class="col p-3">
-                        <div class="app">
-                            <h1>{{park_name}} Conditions:</h1>
-                                <h1 id="temp-main">{{park_temp}}F°</h1>
-                                <h2 id="condition">{{park_cond}}</h2>
-                                <h2 id="condition">Sunrise: {{sunrise}}</h2>
-                                <h2 id="condition">Sunset: {{sunset}}</h2>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

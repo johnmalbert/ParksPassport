@@ -8,6 +8,7 @@ urlpatterns = [
     path('register/data', views.registerdata),
     path('login', views.login),
     path('userlogin', views.userlogin),
-    path('hike/finder', views.hike_finder),
-    path('logout', views.logout,)
+    path('parks', views.parks),
+    path('logout', views.logout,),
+    path('createallparksadmin', views.create_parks)
 ]
