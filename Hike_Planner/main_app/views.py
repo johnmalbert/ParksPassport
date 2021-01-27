@@ -113,6 +113,32 @@ def logout(request):
     del request.session['userid']
     return redirect('/userlogin')
 
+def account(request):
+    context = {
+        "this_user" : User.objects.get(id=request.session['userid'])
+    }
+    return render(request, "my_account.html", context)
+
+def update_account(request):
+    print("update the account.")
+    return redirect('/account')
+
+def visit_park(request, number):
+    #get park by #
+    this_park = Park.objects.get(id=number)
+    #get user by #
+    this_user = User.objects.get(id=request.session['userid'])
+    this_park.visits.add(this_user)
+    print(f"Park {this_park.id} was visited by User # {this_user.id}")
+    return redirect('/parks/user/visited')
+
+def visited_parks(request):
+    context = {
+        "this_user" : User.objects.get(id=request.session['userid']),
+    }
+    return render(request, "visited_parks.html", context)
+
+
 def create_parks(request):
     if (request.session['userid']) != 1:
         return redirect('/parks')
@@ -140,5 +166,7 @@ def create_parks(request):
             img_url = park_data['data'][0]['images'][0]['url'],
             parkCode = user_str
         )
+    # Fix Haleakala name
+    # Delete Acadia id = 1    
     print("Success!")
     return redirect('/parks')

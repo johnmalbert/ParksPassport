@@ -10,5 +10,9 @@ urlpatterns = [
     path('parks', views.parks),
     path('logout', views.logout,),
     path('parks/<int:number>', views.park_by_number),
-    path('createallparksadmin', views.create_parks)
+    path('parks/<int:number>/visit', views.visit_park),
+    path('createallparksadmin', views.create_parks),
+    path('account', views.account),
+    path('account/update', views.update_account),
+    path('parks/user/visited', views.visited_parks)
 ]
