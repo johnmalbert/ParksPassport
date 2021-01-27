@@ -25,59 +25,12 @@ def login(request):
             # if we get True after checking the password, we may put the user id in session
             request.session['userid'] = logged_user.id
             # never render on a post, always redirect!
-            return redirect('/home')
+            return redirect('/parks')
         else:
             messages.error(request, "Invalid Email and Password Combination.")
     else:
         messages.error(request, "Email given is not in the system. Please register.")
     return redirect('/userlogin')
-
-def homepage(request):
-    #get park info
-    user_str = "deva"
-    api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
-    baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
-    resp = requests.get(baseURL_nps)
-    park_data = resp.json()
-    park_name = park_data['data'][0]['fullName']
-    park_url = park_data['data'][0]['url']
-    park_desc = park_data['data'][0]['description']
-    park_long = park_data['data'][0]['longitude']
-    park_lat = park_data['data'][0]['latitude']
-    img_url = park_data['data'][0]['images'][0]['url']
-    print(img_url)
-
-    lon =  park_long
-    lat =  park_lat
-    API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
-
-    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
-    response = requests.get(baseURL)
-    weather_data = response.json()
-    
-    curr = weather_data['current']
-    print(curr)
-    temp = math.floor(curr['temp'])
-    cond = curr['weather'][0]['description']
-    sunrise = datetime.fromtimestamp(curr['sunrise'])
-    sunset = datetime.fromtimestamp(curr['sunset'])
-    print("Sunrise: ",sunrise)
-    print("Sunset: ", sunset)
-    context = {
-        "this_user" : User.objects.get(id=request.session['userid']),
-        "park_name" : park_name,
-        "park_url" : park_url,
-        "park_desc" : park_desc,
-        "park_long" : park_long,
-        "park_lat" : park_lat,
-        "park_img" : img_url,
-        "park_temp" : temp,
-        "park_cond" : cond,
-        "img_url" : img_url,
-        "sunrise" : sunrise,
-        "sunset" : sunset
-    }
-    return render(request, "home.html", context)
 
 def register(request):
     # Perform register process
@@ -106,16 +59,55 @@ def register(request):
         print('successful user creation')
         request.session['userid'] = User.objects.last().id
         print(request.session['userid'])
-        return redirect('/home')
+        return redirect('/parks')
     return redirect('/')
 
 def userlogin(request):
     #display login info
     return render(request, "user_login.html")
 
+def park_by_number(request, number):
+    this_park = Park.objects.get(id=number)
+    lon = this_park.long
+    lat = this_park.lat
+    API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
+
+    # baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    # response = requests.get(baseURL)
+    # weather_data = response.json()
+    weather = {}
+    # curr = weather_data['current']
+    # print(curr)
+    # temp = math.floor(curr['temp'])
+    # cond = curr['weather'][0]['description']
+    # sunrise = datetime.fromtimestamp(curr['sunrise'])
+    # sunset = datetime.fromtimestamp(curr['sunset'])
+    # high = math.floor(weather_data['daily'][0]['temp']['max'])
+    # low = math.floor(weather_data['daily'][0]['temp']['min'])
+    # weather['park_temp'] = temp
+    # weather['park_cond'] = cond
+    # weather['sunrise'] = sunrise
+    # weather['sunset'] = sunset
+    # weather['max'] = high
+    # weather['min'] = low
+
+    # print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
+    # print(this_park.name)
+    context = {
+        "this_park" : this_park,
+        "this_user" : User.objects.get(id = request.session['userid']),
+        "weather" : weather,
+    }
+    return render(request, "home.html", context)
+
 def parks(request):
     # perform hike api search
-    return render(request, "parks.html")
+    allparks = Park.objects.all()
+    context = {
+        "all_parks" : allparks,
+        "this_user" : User.objects.get(id=request.session['userid'])
+    }
+    return render(request, "parks.html", context)
 
 def logout(request):
     del request.session['userid']
@@ -133,7 +125,6 @@ def create_parks(request):
     baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
     resp = requests.get(baseURL_nps)
     park_data = resp.json()
-
     for i in parks_list:
         user_str = i
         api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
@@ -149,6 +140,5 @@ def create_parks(request):
             img_url = park_data['data'][0]['images'][0]['url'],
             parkCode = user_str
         )
-        print(park_name, park_url, park_lat, park_long, img_url)
     print("Success!")
     return redirect('/parks')

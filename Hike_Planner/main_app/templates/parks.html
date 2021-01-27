@@ -17,6 +17,9 @@
             margin: auto;
             display: block;
         }
+        .icon{
+            height: 50px;
+        }
         .park_photo{
             width: 100%;
             max-height: 40rem;
@@ -42,6 +45,10 @@
             font-weight: 300;
             letter-spacing: 5px;
         }
+        h5{
+            color: #267433;
+            text-align: justify;
+        }
     </style>
 
 </head>
@@ -53,16 +60,13 @@
         <a href="/logout"><button class="btn btn-primary">Logout</button></a>
     </nav>
     <main>
-        <div class="container-fluid bg-secondary p-3">
+        <div class="container-fluid p-3">
             <div class="row">
-                <div class="col-6 p-3">
-                    <h1 style="text-align: center">Welcome, {{this_user.first_name}}, Find a Park</h1>
-                    <h1>Park Name: {{park_name}}</h1>
-                    <img class="park_photo" src="{{img_url}}" alt="image from site">
-                    <h1>Location: {{park_long}}, {{park_lat}}</h1>
-                    <h5>Park Description: {{park_desc}}</h5>
-                    <a href="{{park_url}}"><h1>More Information</h1></a>
-                </div>
+                {% for park in all_parks %}
+                    <div class="col-3 border">
+                        <a href="/parks/{{park.id}}"><h5>{{park.name}}</h5></a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

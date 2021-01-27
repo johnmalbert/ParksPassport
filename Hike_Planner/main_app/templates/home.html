@@ -18,7 +18,6 @@
             display: block;
         }
         .park_photo{
-            width: 100%;
             max-height: 40rem;
         }
         .link{
@@ -42,6 +41,17 @@
             font-weight: 300;
             letter-spacing: 5px;
         }
+        .park_name{ 
+            color: white;
+            text-align: center;
+            font-size: 10vh;
+        }
+        .park_desc{ 
+            color: white;
+            text-align: center;
+            font-size: 3vh;
+            margin: 3vh 15vh;
+        }
     </style>
 
 </head>
@@ -54,32 +64,33 @@
     </nav>
     <main>
         <div class="container-fluid bg-secondary p-3">
+            <!-- Context passed: this_park, this_user, weather -->
             <div class="row">
-                <div class="col-6 p-3">
-                    <h1 style="text-align: center">Welcome, {{this_user.first_name}}, Find a Park</h1>
-                    <h1>{{park_name}}</h1>
-                    <img class="park_photo" src="{{img_url}}" alt="image from site">
-                    <h1>Location: {{park_long}}, {{park_lat}}</h1>
-                    <h5>Park Description: {{park_desc}}</h5>
-                    <a href="{{park_url}}"><h1>More Information</h1></a>
-                    <a href="/parks"><button class="btn btn-success">Find a Park</button></a>
+                <div class="col-12 p-3">
+                    <h1 class="park_name">{{this_park.name}}</h1>
+                    <img class="park_photo" src="{{this_park.img_url}}" alt="image from site">
+                    <h5 class="park_desc">Park Description: {{this_park.desc}}</h5>
+                    <a href="{{this_park.url}}"><h5 class="park_desc">More Information</h5></a>
+                    <a href="/parks"><button class="btn btn-success">Find Another Park</button></a>
                 </div>
-                <div class="col-6 bg-light">
+                <div class="col-12 bg-light">
 
-                    <div class="col bg-warning p-5">
+                    <div class="col p-5">
                         <h1 style="text-align: center">Directions</h1>
-                        <iframe width="100%" height="450" frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{park_name}}&key=AIzaSyA-TYiadBnpAmSerXWahx5ccYNTRFQhI1E"
+                        <!-- <iframe width="100%" height="450" frameborder="0" style="border:0"
+                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key=AIzaSyA-TYiadBnpAmSerXWahx5ccYNTRFQhI1E"
                             allowfullscreen>
-                        </iframe>
+                        </iframe> -->
                     </div>
                     <div class="col p-3">
                         <div class="app">
-                            <h1>{{park_name}} Conditions:</h1>
-                                <h1 id="temp-main">{{park_temp}}F°</h1>
-                                <h2 id="condition">{{park_cond}}</h2>
-                                <h2 id="condition">Sunrise: {{sunrise}}</h2>
-                                <h2 id="condition">Sunset: {{sunset}}</h2>
+                            <h1>{{this_park.name}} Conditions:</h1>
+                                <h1 id="temp-main">{{weather.park_temp}}F°</h1>
+                                <h1 id="condition">{{weather.park_cond}}</h1>
+                                <h2 id="condition">Sunrise: {{weather.sunrise}}</h2>
+                                <h2 id="condition">Sunset: {{weather.sunset}}</h2>
+                                <h2 id="condition">Daily High: {{weather.max}}</h2>
+                                <h2 id="condition">Daily Low: {{weather.min}}</h2>
                         </div>
                     </div>
                 </div>
