@@ -134,17 +134,21 @@ def create_parks(request):
     resp = requests.get(baseURL_nps)
     park_data = resp.json()
 
-    # for i in parks_list:
-    #     user_str = i
-    #     api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
-    #     baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
-    #     resp = requests.get(baseURL_nps)
-    #     park_data = resp.json()
-    #     park_name = park_data['data'][0]['fullName']
-    #     park_url = park_data['data'][0]['url']
-    #     park_desc = park_data['data'][0]['description']
-    #     park_long = park_data['data'][0]['longitude']
-    #     park_lat = park_data['data'][0]['latitude']
-    #     img_url = park_data['data'][0]['images'][0]['url']
-    #     print(park_name, park_url, park_lat, park_long, img_url)
+    for i in parks_list:
+        user_str = i
+        api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
+        baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
+        resp = requests.get(baseURL_nps)
+        park_data = resp.json()
+        Park.objects.create(
+            name = park_data['data'][0]['fullName'],
+            url = park_data['data'][0]['url'],
+            desc = park_data['data'][0]['description'],
+            long = park_data['data'][0]['longitude'],
+            lat = park_data['data'][0]['latitude'],
+            img_url = park_data['data'][0]['images'][0]['url'],
+            parkCode = user_str
+        )
+        print(park_name, park_url, park_lat, park_long, img_url)
+    print("Success!")
     return redirect('/parks')

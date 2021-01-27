@@ -39,13 +39,13 @@ class User(models.Model):
 #Hike Class....pull from API?
 
 class Park(models.Model):
-    name = models.CharField()
-    url = models.CharField()
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
     desc = models.TextField()
-    long = models.CharField()
-    lat = models.CharField()
-    img_url = models.CharField()
-    parkCode = models.CharField()
+    long = models.CharField(max_length=255)
+    lat = models.CharField(max_length=255)
+    img_url = models.CharField(max_length=255)
+    parkCode = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
