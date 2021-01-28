@@ -16,7 +16,6 @@
             document.documentElement.scrollTop = 0;
         }
         $(document).ready(function(){
-
             $("#park_photo").click(function(){
                 $("#park_photo").hide();
                 $("#park_photo2").fadeIn(1000);
@@ -82,7 +81,7 @@
         .park_desc{ 
             color: #267433;
             text-align: center;
-            font-size: 3vh;
+            font-size: 2vw;
             margin: 3vh 15vh;
         }
         .banner_img{
@@ -114,8 +113,8 @@
                 <div class="col-12 p-3">
                     <h1 class="park_name">{{this_park.name}}</h1>
                     <img id="park_photo" src="{{this_park.img_url}}" alt="image from site">
-                    <img id="park_photo2" src="{{this_park.img_url1}}" alt="image from site" style="display: none;">
-                    <img id="park_photo3" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
+                    <img id="park_photo2" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
+                    <img id="park_photo3" src="{{this_park.img_url3}}" alt="image from site" style="display: none;">
                     
                     <h5 class="park_desc">{{this_park.desc}}</h5>
                     <div class="col text-center">

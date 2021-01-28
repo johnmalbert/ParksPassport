@@ -177,6 +177,18 @@ def create_parks(request):
         baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
         resp = requests.get(baseURL_nps)
         park_data = resp.json()
+        try:
+            img_url2 = park_data['data'][0]['images'][1]['url']
+            img2_desc = park_data['data'][0]['images'][1]['title']
+        except:
+            img_url2 = park_data['data'][0]['images'][0]['url']
+            img2_desc = park_data['data'][0]['fullname']
+        try:
+            img_url3 = park_data['data'][0]['images'][2]['url']
+            img3_desc = park_data['data'][0]['images'][2]['title']
+        except: 
+            img_url3 = park_data['data'][0]['images'][0]['url']
+            img3_desc = park_data['data'][0]['fullname']
         Park.objects.create(
             name = park_data['data'][0]['fullName'],
             url = park_data['data'][0]['url'],
@@ -184,10 +196,16 @@ def create_parks(request):
             long = park_data['data'][0]['longitude'],
             lat = park_data['data'][0]['latitude'],
             img_url = park_data['data'][0]['images'][0]['url'],
-            img_url2 = park_data['data'][0]['images'][1]['url'],
-            img_url3 = park_data['data'][0]['images'][2]['url'],
+            img_url2 = img_url2,
+            img_url3 = img_url3,
+            img1_desc = park_data['data'][0]['images'][0]['title'],
+            img2_desc = img2_desc,
+            img3_desc = img3_desc,
             parkCode = user_str
         )
     # Fix Haleakala name   
+    park = Park.objects.filter(parkCode="hale")
+    park.name = "Haleakala National Park"
+    park.save()
     print("Success!")
     return redirect('/parks')
