@@ -45,6 +45,8 @@ class Park(models.Model):
     long = models.CharField(max_length=255)
     lat = models.CharField(max_length=255)
     img_url = models.CharField(max_length=255)
+    img_url2 = models.CharField(max_length=255, default=img_url)
+    img_url3 = models.CharField(max_length=255, default=img_url)
     parkCode = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

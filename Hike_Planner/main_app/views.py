@@ -5,6 +5,7 @@ import bcrypt
 import requests
 import math
 from datetime import datetime
+from django.db.models import Count
 
 # Create your views here.
 def index(request):
@@ -73,23 +74,23 @@ def park_by_number(request, number):
     API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
 
     weather = {}
-    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
-    response = requests.get(baseURL)
-    weather_data = response.json()
-    curr = weather_data['current']
-    print(curr)
-    temp = math.floor(curr['temp'])
-    cond = curr['weather'][0]['description']
-    sunrise = datetime.fromtimestamp(curr['sunrise'])
-    sunset = datetime.fromtimestamp(curr['sunset'])
-    high = math.floor(weather_data['daily'][0]['temp']['max'])
-    low = math.floor(weather_data['daily'][0]['temp']['min'])
-    weather['park_temp'] = temp
-    weather['park_cond'] = cond
-    weather['sunrise'] = sunrise
-    weather['sunset'] = sunset
-    weather['max'] = high
-    weather['min'] = low
+    # baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    # response = requests.get(baseURL)
+    # weather_data = response.json()
+    # curr = weather_data['current']
+    # print(curr)
+    # temp = math.floor(curr['temp'])
+    # cond = curr['weather'][0]['description']
+    # sunrise = datetime.fromtimestamp(curr['sunrise'])
+    # sunset = datetime.fromtimestamp(curr['sunset'])
+    # high = math.floor(weather_data['daily'][0]['temp']['max'])
+    # low = math.floor(weather_data['daily'][0]['temp']['min'])
+    # weather['park_temp'] = temp
+    # weather['park_cond'] = cond
+    # weather['sunrise'] = sunrise
+    # weather['sunset'] = sunset
+    # weather['max'] = high
+    # weather['min'] = low
 
     # print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
     # print(this_park.name)
@@ -132,18 +133,37 @@ def visit_park(request, number):
     print(f"Park {this_park.id} was visited by User # {this_user.id}")
     return redirect('/parks/user/visited')
 
+def leaders(request):
+    # list all the users by leader, then list the current user if not listed
+    all_users = User.objects.annotate(cc=Count('visited_parks')).order_by('-cc')
+    context = {
+        "all_users" : all_users,
+        "this_user" : User.objects.get(id=request.session['userid']),
+    }
+    return render(request, "all_users.html", context)
+
+
 def visited_parks(request):
     context = {
         "this_user" : User.objects.get(id=request.session['userid']),
     }
     return render(request, "visited_parks.html", context)
 
+def user_passport(request, number):
+    this_user = User.objects.get(id=request.session['userid'])
+    current_user = User.objects.get(id=number)
+    context = {
+        "this_user" : this_user,
+        "passport_user" : current_user
+    }
+    return render(request, "user_passport.html", context)
+
 
 def create_parks(request):
     if (request.session['userid']) != 1:
         return redirect('/parks')
     parks_list = ['acad', 'arch', 'badl', 'bibe', 'bisc', 'blca', 'brca', 'cany', 'care', 'cave', 'chis', 'cong', 'crla', 
-    'cuva', 'deva', 'dena', 'drto', 'ever', 'gaar', 'jeff', 'glac', 'glba', 'grca', 'grte', 'grba', 'grsa', 'grsm', 'gumo', 
+    'cuva', 'deva', 'dena', 'drto', 'ever', 'gaar', 'glac', 'glba', 'grca', 'grte', 'grba', 'grsa', 'grsm', 'gumo', 
     'hale', 'havo', 'hosp', 'indu', 'isro', 'jotr', 'katm', 'kefj', 'kova', 'lacl', 'lavo', 'maca', 'meve', 'mora', 'neri', 'noca',
     'olym', 'pefo', 'pinn', 'redw', 'romo', 'sagu', 'kimo', 'shen', 'thro', 'viis', 'voya', 'whsa', 'wica', 'wrst', 'yell', 'yose', 'zion']
     user_str = "yell"
@@ -164,9 +184,10 @@ def create_parks(request):
             long = park_data['data'][0]['longitude'],
             lat = park_data['data'][0]['latitude'],
             img_url = park_data['data'][0]['images'][0]['url'],
+            img_url2 = park_data['data'][0]['images'][1]['url'],
+            img_url3 = park_data['data'][0]['images'][2]['url'],
             parkCode = user_str
         )
-    # Fix Haleakala name
-    # Delete Acadia id = 1    
+    # Fix Haleakala name   
     print("Success!")
     return redirect('/parks')
