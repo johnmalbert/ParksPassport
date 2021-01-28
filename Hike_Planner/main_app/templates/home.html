@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>National Parks Passport</title>
+    <link rel="shortcut icon" href="https://png.pngtree.com/png-clipart/20200224/original/pngtree-men-hiking-hat-icon-cartoon-style-png-image_5208389.jpg"/>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -18,15 +19,22 @@
         $(document).ready(function(){
             $("#park_photo").click(function(){
                 $("#park_photo").hide();
+                $("#park_photo_capt").hide();
                 $("#park_photo2").fadeIn(1000);
+                $("#park_photo2_capt").fadeIn(1000);
             })
             $("#park_photo2").click(function(){
                 $("#park_photo2").hide();
+                $("#park_photo2_capt").hide();
+
                 $("#park_photo3").fadeIn(1000);
+                $("#park_photo3_capt").fadeIn(1000);
             })
             $("#park_photo3").click(function(){
                 $("#park_photo3").hide();
+                $("#park_photo3_capt").hide();
                 $("#park_photo").fadeIn(1000);
+                $("#park_photo_capt").fadeIn(1000);
             })
         })
     </script>
@@ -39,14 +47,34 @@
         #park_photo{
             max-height: 40rem;
             padding: 1rem;
+            cursor: pointer;
         }
         #park_photo2{
             max-height: 40rem;
+            cursor: pointer;
             padding: 1rem;
         }
         #park_photo3{
             max-height: 40rem;
+            cursor: pointer;
             padding: 1rem;
+        }
+        #park_photo_capt{
+            color: #267433;
+            text-align: center;
+            font-size: 2vw;
+        }
+        #park_photo2_capt{
+            color: #267433;
+            text-align: center;
+            font-size: 2vw;
+            display: none;
+        }
+        #park_photo3_capt{
+            color: #267433;
+            text-align: center;
+            font-size: 2vw;
+            display: none;
         }
         .link{
             color: black;
@@ -115,12 +143,17 @@
                     <img id="park_photo" src="{{this_park.img_url}}" alt="image from site">
                     <img id="park_photo2" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
                     <img id="park_photo3" src="{{this_park.img_url3}}" alt="image from site" style="display: none;">
-                    
-                    <h5 class="park_desc">{{this_park.desc}}</h5>
+                    <p id="park_photo_capt">Photo: {{this_park.img1_desc}}</p>
+                    <p id="park_photo2_capt">Photo: {{this_park.img2_desc}}</p>
+                    <p id="park_photo3_capt">Photo: {{this_park.img3_desc}}</p>
                     <div class="col text-center">
+                        <a href="/parks/{{this_park.id|add:'-1'}}"><button class="btn btn-success">Previous Park</button></a>
                         <a href="{{this_park.url}}"><button class="btn btn-success">More Information</button></a>
-                        <a href="/parks"><button class="btn btn-success">Find Another Park</button></a>
+                        <a href="/parks/{{this_park.id|add:'1'}}"><button class="btn btn-success">Next Park</button></a>
                     </div><div class="col text-center p-3">
+                    <div class="row border p-5">
+                        <h5 class="park_desc">{{this_park.desc}}</h5>
+                    </div>
                         {% if this_user not in this_park.visits.all %}
                             <a href="/parks/{{this_park.id}}/visit"><button class="btn btn-success">Mark as Visited!</button></a>
                         {% else %}

@@ -182,13 +182,13 @@ def create_parks(request):
             img2_desc = park_data['data'][0]['images'][1]['title']
         except:
             img_url2 = park_data['data'][0]['images'][0]['url']
-            img2_desc = park_data['data'][0]['fullname']
+            img2_desc = park_data['data'][0]['fullName']
         try:
             img_url3 = park_data['data'][0]['images'][2]['url']
             img3_desc = park_data['data'][0]['images'][2]['title']
         except: 
             img_url3 = park_data['data'][0]['images'][0]['url']
-            img3_desc = park_data['data'][0]['fullname']
+            img3_desc = park_data['data'][0]['fullName']
         Park.objects.create(
             name = park_data['data'][0]['fullName'],
             url = park_data['data'][0]['url'],
@@ -204,7 +204,7 @@ def create_parks(request):
             parkCode = user_str
         )
     # Fix Haleakala name   
-    park = Park.objects.filter(parkCode="hale")
+    park = Park.objects.get(parkCode="hale")
     park.name = "Haleakala National Park"
     park.save()
     print("Success!")

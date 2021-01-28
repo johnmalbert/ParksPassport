@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>National Parks Passport</title>
+    <link rel="shortcut icon" href="https://png.pngtree.com/png-clipart/20200224/original/pngtree-men-hiking-hat-icon-cartoon-style-png-image_5208389.jpg"/>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -101,17 +102,17 @@
                 <table class="table table-hover table-dark text-center m-5">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col">Rank</th>
                                 <th scope="col">Ranger Name</th>
                                 <th scope="col">Passport Stamps</th>
                                 <th scope="col">Home Zipcode</th>
-                                <th scope=col>View Passport</th>
+                                <th scope=col>Link to Passport</th>
                               </tr>
                         </thead>          
                         <tbody>
                         {% for user in all_users %}
                             <tr>
-                                    <th scope="row">#</th>
+                                    <th scope="row">#{{ forloop.counter }}</th>
                                     <td>{{user.first_name}} {{user.last_name}}</td>
                                     <td>{{user.visited_parks.all.count}}</td>
                                     <td>{{user.zipcode}}</td>
