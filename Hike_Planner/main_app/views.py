@@ -72,24 +72,24 @@ def park_by_number(request, number):
     lat = this_park.lat
     API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
 
-    # baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
-    # response = requests.get(baseURL)
-    # weather_data = response.json()
     weather = {}
-    # curr = weather_data['current']
-    # print(curr)
-    # temp = math.floor(curr['temp'])
-    # cond = curr['weather'][0]['description']
-    # sunrise = datetime.fromtimestamp(curr['sunrise'])
-    # sunset = datetime.fromtimestamp(curr['sunset'])
-    # high = math.floor(weather_data['daily'][0]['temp']['max'])
-    # low = math.floor(weather_data['daily'][0]['temp']['min'])
-    # weather['park_temp'] = temp
-    # weather['park_cond'] = cond
-    # weather['sunrise'] = sunrise
-    # weather['sunset'] = sunset
-    # weather['max'] = high
-    # weather['min'] = low
+    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    response = requests.get(baseURL)
+    weather_data = response.json()
+    curr = weather_data['current']
+    print(curr)
+    temp = math.floor(curr['temp'])
+    cond = curr['weather'][0]['description']
+    sunrise = datetime.fromtimestamp(curr['sunrise'])
+    sunset = datetime.fromtimestamp(curr['sunset'])
+    high = math.floor(weather_data['daily'][0]['temp']['max'])
+    low = math.floor(weather_data['daily'][0]['temp']['min'])
+    weather['park_temp'] = temp
+    weather['park_cond'] = cond
+    weather['sunrise'] = sunrise
+    weather['sunset'] = sunset
+    weather['max'] = high
+    weather['min'] = low
 
     # print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
     # print(this_park.name)

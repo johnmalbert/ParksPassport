@@ -27,6 +27,27 @@
             color: #007bff;
             font-size: 20px;
         }
+        .login_img{
+            background-image: url("/static/DSC_4839.jpg"); 
+            height: 100%;
+            opacity: 90%;
+        }
+        h2{
+            color: rgb(223, 223, 223);
+            text-shadow: 2px 2px #b5b5b5;
+            padding-top: 15rem;
+            padding-left: 15px;
+            font-size: 6rem;
+            margin: auto;
+        }
+        h3{
+            color: rgb(223, 223, 223);
+            font-size: 4rem;
+            margin: auto;
+        }
+        ul.image{
+            list-style-type: none;
+        }
     </style>
 
 </head>
@@ -35,10 +56,15 @@
         <div class="row">
             <div class="col-8">
                 <div class="login_img">
-                    <img src="{% static 'DSC_4839.JPG' %}" alt="homepage image">
+                    <h2>National Parks Passport </h2>
+                    <ul class="image">
+                        <h3><li> Choose a Park</li></h3>
+                        <h3><li> Plan Your Trip</li></h3>
+                        <h3><li> Add to Passport!</li></h3>
+                    </ul>
                 </div>
             </div>
-            <div class="col-4 p-4 mt-5">
+            <div class="col-4 p-4 mt-5" style="min-height: 45rem;">
                 <h1 style="text-align: center; padding: 1rem;">Exiting User Login</h1>
                     <form action="/login" method="post">
                         <div class="form-group">
@@ -74,7 +100,7 @@
         <div class="row mt-3">
             <div class="col-4">                
                 <h1>Choose a Park</h1>
-                <img class="demo" src="{% static 'park.jpg' %}" alt="park image">
+                <img class="demo" src="{% static 'park_pick.jpg' %}" alt="park image">
             </div>
             <div class="col-4">
                 <h1>Get Directions Instantly</h1>
@@ -82,7 +108,7 @@
             </div>
             <div class="col-4">
                 <h1>Check the Forecast</h1>
-                <img class="demo" src="{% static 'weather.jpg' %}" alt="maps image">
+                <img class="demo" src="{% static 'weather_current.jpg' %}" alt="maps image">
             </div>
         </div>
         </div>  
@@ -93,14 +119,16 @@
                 <button class="btn btn-default" onclick="topFunction()" btn-default title="Go to top">Return to Top</button>
             </div>
             <div class="card-body">
-                <h6 class="card-title">Created by John Albert</h6>
-              <p class="card-text">Find out more about me...</p>
-              <a href="https://github.com/johnmalbert" class="btn btn-primary">Github</a>
-            </div>
+                <h5 class="card-title">Created by John Albert</h5>
+                <p class="card-text">Find out more about me...</p>
+                <a class="link" href="https://www.github.com/johnmalbert"><i class="fa fa-github" aria-hidden="true"></i>Github</a>
+                <a class="link" href="https://www.linkedin.com/in/john-m-albert/"><i class="fa fa-linkedin" aria-hidden="true"></i>Linkedin</a>
+                <a class="link" href="https://www.instagram.com/chasethealberts"><i class="fa fa-instagram" aria-hidden="true"></i>Instagram</a>
+                    </div>
             <div class="card-footer text-muted">
-              2 days ago
+                Coding Dojo Full Stack Developer
             </div>
-          </div>
+        </div>
     </div>
     
 </body>
