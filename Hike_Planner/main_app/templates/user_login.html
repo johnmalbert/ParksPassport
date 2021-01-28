@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roadtrip Planner Login</title>
+    <title>National Parks Passport</title>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/fe0b1ed089.js"></script>
@@ -69,24 +69,24 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid text-center" style="background-color: #476118;">
+    <div class="container-fluid text-center p-5" style="background-color: #f1f4f8;">
+        <div class="shadow-lg p-3 mb-5 bg-white rounded" style="background-color: #f1f4f8;">
         <div class="row mt-3">
-            <div class="col m-5 bg-white">
+            <div class="col-4">                
                 <h1>Choose a Park</h1>
-                <img class="demo" src="{% static 'park.jpg' %}" alt="maps image">
-
+                <img class="demo" src="{% static 'park.jpg' %}" alt="park image">
             </div>
-            <div class="col m-5 bg-white">
+            <div class="col-4">
                 <h1>Get Directions Instantly</h1>
-                <img class="demo" src="{% static 'directions.jpg' %}" alt="maps image">
+                <img class="demo" src="{% static 'directions.jpg' %}" alt="directions image">
             </div>
-            <div class="col m-5 bg-white">
+            <div class="col-4">
                 <h1>Check the Forecast</h1>
                 <img class="demo" src="{% static 'weather.jpg' %}" alt="maps image">
             </div>
         </div>
+        </div>  
     </div>
-
     <div class="container-fluid p-5 h-100">
         <div class="card text-center">
             <div class="card-header">
