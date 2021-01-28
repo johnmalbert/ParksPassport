@@ -12,7 +12,7 @@ def index(request):
 
 def registerdata(request):
     context = {
-        "message" : "Users can customize app experience, including directions and search preferences. We will never email you."
+        "message" : "Users can customize app experience, including directions and search preferences. We will never email you. Hint: Use a fake email!"
     }
     return render(request, "login.html", context)
 

@@ -7,6 +7,12 @@
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://use.fontawesome.com/fe0b1ed089.js"></script>
+    <script>
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
     <style>
         img{
             width: 100%;
@@ -16,6 +22,10 @@
         .demo{
             width: 75%;
             margin: auto;
+        }
+        .link {
+            color: #007bff;
+            font-size: 20px;
         }
     </style>
 
@@ -80,7 +90,7 @@
     <div class="container-fluid p-5 h-100">
         <div class="card text-center">
             <div class="card-header">
-              Notes about page
+                <button class="btn btn-default" onclick="topFunction()" btn-default title="Go to top">Return to Top</button>
             </div>
             <div class="card-body">
                 <h6 class="card-title">Created by John Albert</h6>
