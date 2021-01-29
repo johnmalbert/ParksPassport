@@ -175,6 +175,7 @@ def user_passport(request, number):
 
 
 def create_parks(request):
+    print("Creating all the parks.")
     if (request.session['userid']) != 1:
         return redirect('/parks')
     parks_list = ['acad', 'arch', 'badl', 'bibe', 'bisc', 'blca', 'brca', 'cany', 'care', 'cave', 'chis', 'cong', 'crla', 
@@ -192,6 +193,9 @@ def create_parks(request):
         baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
         resp = requests.get(baseURL_nps)
         park_data = resp.json()
+        parkname = park_data['data'][0]['fullName']
+        parkname = parkname.replace("&#257;", "a")
+        parkname = parkname.replace("&", "and")
         try:
             img_url2 = park_data['data'][0]['images'][1]['url']
             img2_desc = park_data['data'][0]['images'][1]['title']
@@ -205,7 +209,7 @@ def create_parks(request):
             img_url3 = park_data['data'][0]['images'][0]['url']
             img3_desc = park_data['data'][0]['fullName']
         Park.objects.create(
-            name = park_data['data'][0]['fullName'],
+            name = parkname,
             url = park_data['data'][0]['url'],
             desc = park_data['data'][0]['description'],
             long = park_data['data'][0]['longitude'],
@@ -219,8 +223,5 @@ def create_parks(request):
             parkCode = user_str
         )
     # Fix Haleakala name   
-    park = Park.objects.get(parkCode="hale")
-    park.name = "Haleakala National Park"
-    park.save()
     print("Success!")
     return redirect('/parks')

@@ -83,8 +83,8 @@
     <nav class="navbar sticky-top">
         <div>
             <img class="banner_img" src="{% static 'nps.png' %}" alt="NPS">
-            <h1
-                style="text-align: center; display: inline-block; vertical-align: bottom; padding: 10px; color: #267433; ">
+            
+            <h1 style="text-align: center; display: inline-block; vertical-align: bottom; padding: 10px; color: #267433; ">
                 Welcome, Ranger {{this_user.first_name}}</h1>
         </div>
         <div>
@@ -97,7 +97,13 @@
     </nav>
     <main>
         <div class="container-fluid p-3">
-            <h1 style="text-align: center; color: #267433; padding: 2rem; font-size: 3vw; text-shadow: 1px 1px #7c7c7c;">Your Passport: </h1>
+            <div class="card text-center">
+                <div class="card-header">
+                    <div class="shadow rounded" style="background-color: #e6e6e6">
+                        <h1 style="text-align: center; color: #267433; padding: 2rem; font-size: 3vw; text-shadow: 1px 1px #7c7c7c;">YOUR PASSPORT: </h1>
+                    </div>
+                </div>
+            </div>
             <div class="row" style="background-color: #f1f4f8">
                 {% for park in this_user.visited_parks.all %}
                     <div class="col-3 p-4" style="height: 20rem;">
@@ -181,13 +187,13 @@
             <div class="card-body">
                 <h6 class="card-title">Created by John Albert</h6>
                 <p class="card-text">Find out more about me...</p>
-                <a class="link" href="https://www.github.com/johnmalbert"><i class="fa fa-github"
-                        aria-hidden="true"></i>Github</a>
-                <a class="link" href="https://www.linkedin.com/in/john-m-albert/"><i class="fa fa-linkedin"
-                        aria-hidden="true"></i>Linkedin</a>
-                <a class="link" href="https://www.instagram.com/chasethealberts"><i class="fa fa-instagram"
-                        aria-hidden="true"></i>Instagram</a>
-            </div>
+                <a class="link" href="https://www.github.com/johnmalbert" style="color: black;"><i class="fa fa-github"
+                    aria-hidden="true"> </i>&nbsp  &nbsp</a>
+            <a class="link" href="https://www.linkedin.com/in/john-m-albert/"><i class="fa fa-linkedin"
+                    aria-hidden="true"> </i>&nbsp  &nbsp</a>
+            <a class="link" href="https://www.instagram.com/chasethealberts" style="color: rgb(255, 60, 0)"><i class="fa fa-instagram"
+                    aria-hidden="true"> </i>&nbsp  &nbsp</a>
+        </div>
             <div class="card-footer text-muted">
                 Coding Dojo Full Stack Developer
             </div>
