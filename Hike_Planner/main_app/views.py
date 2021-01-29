@@ -26,6 +26,7 @@ def login(request):
             # if we get True after checking the password, we may put the user id in session
             request.session['userid'] = logged_user.id
             # never render on a post, always redirect!
+            request.session['allparks'] = True
             return redirect('/parks')
         else:
             messages.error(request, "Invalid Email and Password Combination.")
@@ -103,7 +104,21 @@ def park_by_number(request, number):
 
 def parks(request):
     # perform hike api search
+    first_parks = []
+    for i in range(1,9):
+        new_park = Park.objects.get(id=i)
+        first_parks.append(new_park)
+    # allparks = Park.objects.all()
+    request.session['allparks'] = True
+    context = {
+        "all_parks" : first_parks,
+        "this_user" : User.objects.get(id=request.session['userid'])
+    }
+    return render(request, "parks.html", context)
+
+def allparks(request):
     allparks = Park.objects.all()
+    request.session['allparks'] = False
     context = {
         "all_parks" : allparks,
         "this_user" : User.objects.get(id=request.session['userid'])

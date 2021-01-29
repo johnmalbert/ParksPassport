@@ -184,6 +184,11 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% if request.session.allparks %}
+                <div class="col text-center p-5">
+                    <a href="/parks/allparks" style="text-align: center;"><button class="btn btn-primary">View All Parks</button></a>
+                </div>
+                {% endif %}
             </div>
         </div>
         </div>
