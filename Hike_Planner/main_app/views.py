@@ -69,6 +69,10 @@ def userlogin(request):
     return render(request, "user_login.html")
 
 def park_by_number(request, number):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_park = Park.objects.get(id=number)
     lon = this_park.long
     lat = this_park.lat
@@ -104,6 +108,10 @@ def park_by_number(request, number):
 
 def parks(request):
     # perform hike api search
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     first_parks = []
     for i in range(1,9):
         new_park = Park.objects.get(id=i)
@@ -117,6 +125,10 @@ def parks(request):
     return render(request, "parks.html", context)
 
 def allparks(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     allparks = Park.objects.all()
     request.session['allparks'] = False
     context = {
@@ -130,6 +142,10 @@ def logout(request):
     return redirect('/userlogin')
 
 def account(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     context = {
         "this_user" : User.objects.get(id=request.session['userid'])
     }
@@ -159,12 +175,20 @@ def leaders(request):
 
 
 def visited_parks(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     context = {
         "this_user" : User.objects.get(id=request.session['userid']),
     }
     return render(request, "visited_parks.html", context)
 
 def user_passport(request, number):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_user = User.objects.get(id=request.session['userid'])
     current_user = User.objects.get(id=number)
     context = {
