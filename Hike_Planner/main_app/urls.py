@@ -17,5 +17,6 @@ urlpatterns = [
     path('account/update', views.update_account),
     path('parks/user/visited', views.visited_parks),
     path('parks/user/leaders', views.leaders),
-    path('user/<int:number>/passport', views.user_passport)
+    path('user/<int:number>/passport', views.user_passport),
+    path('parks/random', views.random_park)
 ]

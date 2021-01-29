@@ -128,6 +128,7 @@
         </div>
         <div>
             <a href="/parks"><button class="btn btn-default">Select a Park</button></a>
+            <a href="/parks/random"><button class="btn btn-default">Random Park</button></a>
             <a href="/parks/user/visited"><button class="btn btn-default">Visited Parks</button></a>
             <a href="/parks/user/leaders"><button class="btn btn-default">Passport Leaders</button></a>
             <a href="/account"><button class="btn btn-default">My Account</button></a>
@@ -174,7 +175,7 @@
 
                     <div class="col p-5">
                         <iframe width="100%" height="450" frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key=AIzaSyA-TYiadBnpAmSerXWahx5ccYNTRFQhI1E"
+                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key={{maps_key}}"
                             allowfullscreen>
                         </iframe>
                     </div>

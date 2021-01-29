@@ -6,6 +6,8 @@ import requests
 import math
 from datetime import datetime
 from django.db.models import Count
+import random
+import config
 
 # Create your views here.
 def index(request):
@@ -76,14 +78,11 @@ def park_by_number(request, number):
     this_park = Park.objects.get(id=number)
     lon = this_park.long
     lat = this_park.lat
-    API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
-
     weather = {}
-    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={config.API_KEY}"
     response = requests.get(baseURL)
     weather_data = response.json()
     curr = weather_data['current']
-    print(curr)
     temp = math.floor(curr['temp'])
     cond = curr['weather'][0]['description']
     sunrise = datetime.fromtimestamp(curr['sunrise'])
@@ -103,6 +102,7 @@ def park_by_number(request, number):
         "this_park" : this_park,
         "this_user" : User.objects.get(id = request.session['userid']),
         "weather" : weather,
+        "maps_key" : config.maps_key
     }
     return render(request, "home.html", context)
 
@@ -161,7 +161,6 @@ def visit_park(request, number):
     #get user by #
     this_user = User.objects.get(id=request.session['userid'])
     this_park.visits.add(this_user)
-    print(f"Park {this_park.id} was visited by User # {this_user.id}")
     return redirect('/parks/user/visited')
 
 def leaders(request):
@@ -197,6 +196,11 @@ def user_passport(request, number):
     }
     return render(request, "user_passport.html", context)
 
+def random_park(request):
+    #create a random number, redirect to that park's page
+    rand = random.randrange(1,len(Park.objects.all()))
+    return redirect(f"/parks/{rand}")
+
 
 def create_parks(request):
     print("Creating all the parks.")
@@ -207,8 +211,8 @@ def create_parks(request):
     'hale', 'havo', 'hosp', 'indu', 'isro', 'jotr', 'katm', 'kefj', 'kova', 'lacl', 'lavo', 'maca', 'meve', 'mora', 'neri', 'noca',
     'olym', 'pefo', 'pinn', 'redw', 'romo', 'sagu', 'seki', 'shen', 'thro', 'viis', 'voya', 'whsa', 'wica', 'wrst', 'yell', 'yose', 'zion']
     user_str = "yell"
-    api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
-    baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"
+    
+    baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={config.api_key_nps}"
     resp = requests.get(baseURL_nps)
     park_data = resp.json()
     for i in parks_list:
