@@ -75,26 +75,26 @@ def park_by_number(request, number):
     API_KEY = 'd36ad86fcc0091b23f6132b4b6cc00e7'
 
     weather = {}
-    # baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
-    # response = requests.get(baseURL)
-    # weather_data = response.json()
-    # curr = weather_data['current']
-    # print(curr)
-    # temp = math.floor(curr['temp'])
-    # cond = curr['weather'][0]['description']
-    # sunrise = datetime.fromtimestamp(curr['sunrise'])
-    # sunset = datetime.fromtimestamp(curr['sunset'])
-    # high = math.floor(weather_data['daily'][0]['temp']['max'])
-    # low = math.floor(weather_data['daily'][0]['temp']['min'])
-    # weather['park_temp'] = temp
-    # weather['park_cond'] = cond
-    # weather['sunrise'] = sunrise
-    # weather['sunset'] = sunset
-    # weather['max'] = high
-    # weather['min'] = low
+    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={API_KEY}"
+    response = requests.get(baseURL)
+    weather_data = response.json()
+    curr = weather_data['current']
+    print(curr)
+    temp = math.floor(curr['temp'])
+    cond = curr['weather'][0]['description']
+    sunrise = datetime.fromtimestamp(curr['sunrise'])
+    sunset = datetime.fromtimestamp(curr['sunset'])
+    high = math.floor(weather_data['daily'][0]['temp']['max'])
+    low = math.floor(weather_data['daily'][0]['temp']['min'])
+    weather['park_temp'] = temp
+    weather['park_cond'] = cond
+    weather['sunrise'] = sunrise
+    weather['sunset'] = sunset
+    weather['max'] = high
+    weather['min'] = low
 
-    # print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
-    # print(this_park.name)
+    print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
+    print(this_park.name)
     context = {
         "this_park" : this_park,
         "this_user" : User.objects.get(id = request.session['userid']),
@@ -180,7 +180,7 @@ def create_parks(request):
     parks_list = ['acad', 'arch', 'badl', 'bibe', 'bisc', 'blca', 'brca', 'cany', 'care', 'cave', 'chis', 'cong', 'crla', 
     'cuva', 'deva', 'dena', 'drto', 'ever', 'gaar', 'glac', 'glba', 'grca', 'grte', 'grba', 'grsa', 'grsm', 'gumo', 
     'hale', 'havo', 'hosp', 'indu', 'isro', 'jotr', 'katm', 'kefj', 'kova', 'lacl', 'lavo', 'maca', 'meve', 'mora', 'neri', 'noca',
-    'olym', 'pefo', 'pinn', 'redw', 'romo', 'sagu', 'kimo', 'shen', 'thro', 'viis', 'voya', 'whsa', 'wica', 'wrst', 'yell', 'yose', 'zion']
+    'olym', 'pefo', 'pinn', 'redw', 'romo', 'sagu', 'seki', 'shen', 'thro', 'viis', 'voya', 'whsa', 'wica', 'wrst', 'yell', 'yose', 'zion']
     user_str = "yell"
     api_key_nps = "GeD3b0hdw5tjKddemD7MkjHLvL9CLBJei3EJRgnf"
     baseURL_nps = f"https://developer.nps.gov/api/v1/parks?parkCode={user_str}&api_key={api_key_nps}"

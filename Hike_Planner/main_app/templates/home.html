@@ -156,9 +156,9 @@
 
                             <h5 class="park_desc">{{this_park.desc}}</h5>
                             {% if this_user not in this_park.visits.all %}
-                                <a href="/parks/{{this_park.id}}/visit"><button class="btn">Mark as Visited!</button></a>
+                                <a href="/parks/{{this_park.id}}/visit"><button class="btn btn-primary">Mark as Visited!</button></a>
                             {% else %}
-                                <a href="/parks/user/visited"><button class="btn">On Your Passport!</button></a>
+                                <a href="/parks/user/visited"><button class="btn btn-success">On Your Passport!</button></a>
                             {% endif %}
                         </div>
                     </div>
@@ -167,10 +167,10 @@
                 <div class="col-12 bg-light">
 
                     <div class="col p-5">
-                        <!-- <iframe width="100%" height="450" frameborder="0" style="border:0"
+                        <iframe width="100%" height="450" frameborder="0" style="border:0"
                             src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key=AIzaSyA-TYiadBnpAmSerXWahx5ccYNTRFQhI1E"
                             allowfullscreen>
-                        </iframe> -->
+                        </iframe>
                     </div>
                     <div class="col p-3">
                         <div class="app">
