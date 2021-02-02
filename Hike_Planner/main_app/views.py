@@ -222,7 +222,7 @@ def create_parks(request):
         resp = requests.get(baseURL_nps)
         park_data = resp.json()
         parkname = park_data['data'][0]['fullName']
-        parkname = parkname.replace("&#257;", "a")
+        # parkname = parkname.replace("&#257;", "a")
         parkname = parkname.replace("&", "and")
         try:
             img_url2 = park_data['data'][0]['images'][1]['url']
@@ -252,4 +252,5 @@ def create_parks(request):
         )
     # Fix Haleakala name   
     print("Success!")
+    request.session['created'] = True
     return redirect('/parks')
