@@ -197,7 +197,7 @@
                         <a href="/parks/{{park.id}}/visit"><button class="btn btn-primary"
                             style="text-align: center;">Mark as Visited</button></a>
                         {% else %}
-                        <button class="btn btn-success">Visited!</button>
+                        <a href="parks/user/{{park.id}}/removevisit/home"><button class="btn btn-success">Remove Visit from Passport</button></a>
                         {% endif %}
                     </div>
                 </div>

@@ -123,6 +123,12 @@
             display: inline-block;
             vertical-align: middle;
         }
+        #weather_icon{
+            max-height: 8rem;
+            background-color: rgb(161, 161, 161);
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -183,13 +189,13 @@
                         <a href="/parks/{{this_park.id|add:'1'}}"><button class="btn btn-success">Next Park</button></a>
                     </div><div class="col text-center p-3">
                     <div class="row border p-5">
-                        <div class="col text-center">
+                        <div class="col-sm-12 text-center">
 
                             <h5 class="park_desc">{{this_park.desc}}</h5>
                             {% if this_user not in this_park.visits.all %}
-                                <a href="/parks/{{this_park.id}}/visit"><button class="btn btn-primary">Mark as Visited!</button></a>
+                                <a href="/parks/{{this_park.id}}/visit/page"><button class="btn btn-primary">Mark as Visited!</button></a>
                             {% else %}
-                                <a href="/parks/user/visited"><button class="btn btn-success">On Your Passport!</button></a>
+                                <a href="/parks/user/{{this_park.id}}/removevisit"><button class="btn btn-success">Remove Stamp from Passport</button></a>
                             {% endif %}
                         </div>
                     </div>
@@ -208,8 +214,9 @@
                             <h1>{{this_park.name}} Conditions:</h1>
                                 <h1 id="temp-main">{{weather.park_temp}}F°</h1>
                                 <h1 id="condition">{{weather.park_cond}}</h1>
-                                <h2 id="condition">Sunrise: {{weather.sunrise}}</h2>
-                                <h2 id="condition">Sunset: {{weather.sunset}}</h2>
+                                <img id="weather_icon" src={{weather.icon}} alt="weather cond">
+                                <!-- <h2 id="condition">Sunrise: {{weather.sunrise}}</h2>
+                                <h2 id="condition">Sunset: {{weather.sunset}}</h2> -->
                                 <h2 id="condition">Daily High: {{weather.max}}F°</h2>
                                 <h2 id="condition">Daily Low: {{weather.min}}F°</h2>
                         </div>

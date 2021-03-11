@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import User, Park
+from .models import User, Park, Rating
 from django.contrib import messages
 import bcrypt
 import requests
@@ -83,6 +83,7 @@ def park_by_number(request, number):
     response = requests.get(baseURL)
     weather_data = response.json()
     curr = weather_data['current']
+    print(curr)
     temp = math.floor(curr['temp'])
     cond = curr['weather'][0]['description']
     sunrise = datetime.fromtimestamp(curr['sunrise'])
@@ -95,9 +96,8 @@ def park_by_number(request, number):
     weather['sunset'] = sunset
     weather['max'] = high
     weather['min'] = low
-
-    print(weather['park_temp'], weather['park_cond'], weather['sunrise'], weather['sunset'])
-    print(this_park.name)
+    icon = curr['weather'][0]['icon']
+    weather['icon'] = f"http://openweathermap.org/img/wn/{icon}@2x.png"
     context = {
         "this_park" : this_park,
         "this_user" : User.objects.get(id = request.session['userid']),
@@ -161,7 +161,41 @@ def visit_park(request, number):
     #get user by #
     this_user = User.objects.get(id=request.session['userid'])
     this_park.visits.add(this_user)
-    return redirect('/parks/user/visited')
+    # add rating for the new park
+    new_rating = Rating.objects.create(
+        parkId = number,
+        parkRating = 5,
+        owner = this_user
+    )
+    #reroute depending on where user came from
+    return redirect('/parks/allparks')
+
+def visit_park_from_page(request, number):
+    #get park by #
+    this_park = Park.objects.get(id=number)
+    #get user by #
+    this_user = User.objects.get(id=request.session['userid'])
+    this_park.visits.add(this_user)
+    # add a new rating for the added park.
+    new_rating = Rating.objects.create(
+        parkId = number,
+        parkRating = 0,
+        owner = this_user
+    )
+    #reroute depending on where user came from
+    return redirect(f'/parks/{number}')
+
+def remove_visit(request, number):
+    this_park = Park.objects.get(id=number)
+    this_user = User.objects.get(id=request.session['userid'])
+    this_park.visits.remove(this_user)
+    return redirect('/parks/allparks')
+
+def remove_visit_from_page(request, number):
+    this_park = Park.objects.get(id=number)
+    this_user = User.objects.get(id=request.session['userid'])
+    this_park.visits.remove(this_user)
+    return redirect(f'/parks/{number}')
 
 def leaders(request):
     # list all the users by leader, then list the current user if not listed
@@ -201,6 +235,52 @@ def random_park(request):
     rand = random.randrange(1,len(Park.objects.all()))
     return redirect(f"/parks/{rand}")
 
+def parks_game(request):
+    this_user = User.objects.get(id=request.session['userid'])
+    rand = random.randrange(0,len(this_user.visited_parks.all()))
+    rand2 = random.randrange(0,len(this_user.visited_parks.all()))
+    while(rand == rand2):
+        rand2 = random.randrange(0,len(this_user.visited_parks.all()))
+    # get list of current user's passport
+    # find two random parks
+    parks_list = []
+    for park in this_user.visited_parks.all():
+        parks_list.append(park)
+    park1 = parks_list[rand]
+    park2 = parks_list[rand2]
+    context = {
+        "this_user" : this_user,
+        "park1" : park1,
+        "park2" : park2
+    }
+    return render(request, "parks_game.html", context)
+
+def rank_park(request, winner, loser):
+    current_user = User.objects.get(id=request.session['userid'])
+    park_rating = Rating.objects.get(parkId = winner, owner = current_user)
+    # print(f"Park {winner} is rated {park_rating.parkRating}")
+    park_rating.parkRating = park_rating.parkRating + 2
+    print(f"{park_rating.parkId} is rated {park_rating.parkRating}")
+    park_rating.save()
+    # assign 5 pts to winner
+    # take away 1 pt from loser
+    return redirect('/parks/game')
+
+def display_ranked_parks(request):
+    this_user = User.objects.get(id=request.session['userid'])
+    # rank all the parks in order
+    park_ratings = Rating.objects.filter(owner = this_user).order_by("-parkRating")
+    list = []
+    for rating in park_ratings:
+        list.append(Park.objects.get(id=rating.parkId))
+    for park in park_ratings:
+        print(f"{park.parkId} is rated {park.parkRating}")
+    # get the user's rankings:
+    context = {
+        "this_user" : this_user,
+        "parks_in_order" : list,
+    }
+    return render(request, "ranked.html", context)
 
 def create_parks(request):
     print("Creating all the parks.")

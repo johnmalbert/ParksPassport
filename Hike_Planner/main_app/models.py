@@ -37,6 +37,7 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
     #visited_parks = list of all the parks visited by user
+    #park_ratings = list of all the parks rated by user
 
 class Park(models.Model):
     name = models.CharField(max_length=255)
@@ -54,4 +55,11 @@ class Park(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     visits = models.ManyToManyField(User, related_name="visited_parks")
-    
+    # rating = models.ManyToManyField(User, related_name="park_rating")
+
+class Rating(models.Model):
+    owner = models.ForeignKey(User, related_name="ratings", on_delete = models.CASCADE)
+    parkId = models.IntegerField()
+    parkRating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
