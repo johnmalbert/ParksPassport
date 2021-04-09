@@ -27,6 +27,7 @@ def login(request):
         if bcrypt.checkpw(request.POST['password'].encode(), logged_user.password.encode()):
             # if we get True after checking the password, we may put the user id in session
             request.session['userid'] = logged_user.id
+            request.session['parksGame'] = 0
             # never render on a post, always redirect!
             request.session['allparks'] = True
             return redirect('/parks')
@@ -62,6 +63,7 @@ def register(request):
         print(User.objects.last())
         print('successful user creation')
         request.session['userid'] = User.objects.last().id
+        request.session['parksGame'] = 0
         print(request.session['userid'])
         return redirect('/parks')
     return redirect('/')
@@ -71,10 +73,6 @@ def userlogin(request):
     return render(request, "user_login.html")
 
 def park_by_number(request, number):
-    try:
-        request.session['userid']
-    except: 
-        return redirect('/')
     this_park = Park.objects.get(id=number)
     lon = this_park.long
     lat = this_park.lat
@@ -98,6 +96,15 @@ def park_by_number(request, number):
     weather['min'] = low
     icon = curr['weather'][0]['icon']
     weather['icon'] = f"http://openweathermap.org/img/wn/{icon}@2x.png"
+    try:
+        this_user = User.objects.get(id = request.session['userid'])
+    except:
+        context = {
+            "this_park" : this_park,
+            "weather" : weather,
+            "maps_key" : config.maps_key
+        }
+        return render(request, "home.html", context)
     context = {
         "this_park" : this_park,
         "this_user" : User.objects.get(id = request.session['userid']),
@@ -111,7 +118,7 @@ def parks(request):
     try:
         request.session['userid']
     except: 
-        return redirect('/')
+        return redirect('/parks/guest')
     first_parks = []
     for i in range(1,9):
         new_park = Park.objects.get(id=i)
@@ -125,11 +132,11 @@ def parks(request):
     return render(request, "parks.html", context)
 
 def allparks(request):
+    allparks = Park.objects.all()
     try:
         request.session['userid']
     except: 
-        return redirect('/')
-    allparks = Park.objects.all()
+        return redirect('/parks/allparks/guest')
     request.session['allparks'] = False
     context = {
         "all_parks" : allparks,
@@ -153,12 +160,20 @@ def account(request):
 
 def update_account(request):
     print("update the account.")
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     return redirect('/account')
 
 def visit_park(request, number):
     #get park by #
     this_park = Park.objects.get(id=number)
     #get user by #
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_user = User.objects.get(id=request.session['userid'])
     this_park.visits.add(this_user)
     # add rating for the new park
@@ -174,6 +189,10 @@ def visit_park_from_page(request, number):
     #get park by #
     this_park = Park.objects.get(id=number)
     #get user by #
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_user = User.objects.get(id=request.session['userid'])
     this_park.visits.add(this_user)
     # add a new rating for the added park.
@@ -200,6 +219,13 @@ def remove_visit_from_page(request, number):
 def leaders(request):
     # list all the users by leader, then list the current user if not listed
     all_users = User.objects.annotate(cc=Count('visited_parks')).order_by('-cc')
+    try:
+        request.session['userid']
+    except:
+        context = {
+            "all_users" : all_users,
+        }
+        return render(request, "all_users.html", context)
     context = {
         "all_users" : all_users,
         "this_user" : User.objects.get(id=request.session['userid']),
@@ -221,7 +247,11 @@ def user_passport(request, number):
     try:
         request.session['userid']
     except: 
-        return redirect('/')
+        current_user = User.objects.get(id=number)
+        context = {
+            "passport_user" : current_user
+        }
+        return render(request, "user_passport.html", context)
     this_user = User.objects.get(id=request.session['userid'])
     current_user = User.objects.get(id=number)
     context = {
@@ -236,6 +266,10 @@ def random_park(request):
     return redirect(f"/parks/{rand}")
 
 def parks_game(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_user = User.objects.get(id=request.session['userid'])
     rand = random.randrange(0,len(this_user.visited_parks.all()))
     rand2 = random.randrange(0,len(this_user.visited_parks.all()))
@@ -256,18 +290,29 @@ def parks_game(request):
     return render(request, "parks_game.html", context)
 
 def rank_park(request, winner, loser):
+    if request.session['parksGame'] > 10:
+        return redirect('/parks/ranked')
     current_user = User.objects.get(id=request.session['userid'])
     park_rating = Rating.objects.get(parkId = winner, owner = current_user)
+    park_rating_loser = Rating.objects.get(parkId = loser, owner = current_user)
     # print(f"Park {winner} is rated {park_rating.parkRating}")
     park_rating.parkRating = park_rating.parkRating + 2
+    park_rating_loser.parkRating = park_rating_loser.parkRating - 1
     print(f"{park_rating.parkId} is rated {park_rating.parkRating}")
     park_rating.save()
+    request.session['parksGame'] += 1
+    print(request.session['parksGame'])
     # assign 5 pts to winner
     # take away 1 pt from loser
     return redirect('/parks/game')
 
 def display_ranked_parks(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
     this_user = User.objects.get(id=request.session['userid'])
+    request.session['parksGame'] = 0
     # rank all the parks in order
     park_ratings = Rating.objects.filter(owner = this_user).order_by("-parkRating")
     list = []
@@ -334,3 +379,60 @@ def create_parks(request):
     print("Success!")
     request.session['created'] = True
     return redirect('/parks')
+
+#Guest accessable pages: Parks, park_by_number, allparks, leaders, random_park\
+def park_by_number_guest(request, number):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
+    this_park = Park.objects.get(id=number)
+    lon = this_park.long
+    lat = this_park.lat
+    weather = {}
+    baseURL = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&appid={config.API_KEY}"
+    response = requests.get(baseURL)
+    weather_data = response.json()
+    curr = weather_data['current']
+    print(curr)
+    temp = math.floor(curr['temp'])
+    cond = curr['weather'][0]['description']
+    sunrise = datetime.fromtimestamp(curr['sunrise'])
+    sunset = datetime.fromtimestamp(curr['sunset'])
+    high = math.floor(weather_data['daily'][0]['temp']['max'])
+    low = math.floor(weather_data['daily'][0]['temp']['min'])
+    weather['park_temp'] = temp
+    weather['park_cond'] = cond
+    weather['sunrise'] = sunrise
+    weather['sunset'] = sunset
+    weather['max'] = high
+    weather['min'] = low
+    icon = curr['weather'][0]['icon']
+    weather['icon'] = f"http://openweathermap.org/img/wn/{icon}@2x.png"
+    context = {
+        "this_park" : this_park,
+        "this_user" : User.objects.get(id = request.session['userid']),
+        "weather" : weather,
+        "maps_key" : config.maps_key
+    }
+    return render(request, "home.html", context)
+
+def parks_guest(request):
+    first_parks = []
+    for i in range(1,9):
+        new_park = Park.objects.get(id=i)
+        first_parks.append(new_park)
+    # allparks = Park.objects.all()
+    request.session['allparks'] = True
+    context = {
+        "all_parks" : first_parks
+    }
+    return render(request, "parks.html", context)
+
+def allparks_guest(request):
+    allparks = Park.objects.all()
+    request.session['allparks'] = False
+    context = {
+        "all_parks" : allparks,
+    }
+    return render(request, "parks.html", context)

@@ -1,33 +1,4 @@
-Skip to content
-Search or jump to…
 
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@johnmalbert 
-johnmalbert
-/
-Ninja_Gold
-1
-00
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-Ninja_Gold/.gitignore
-@johnmalbert
-johnmalbert Initial commit
-Latest commit 9df5bda 13 days ago
- History
- 1 contributor
-152 lines (122 sloc)  2.34 KB
   
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django

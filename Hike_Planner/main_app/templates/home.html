@@ -151,10 +151,11 @@
                 <a href="/parks/random"><button class="btn btn-default">Random Park</button></a>
             </li>
             <li class="nav-item">
-                <a href="/parks/user/visited"><button class="btn btn-default">Your Passport</button></a>
-            </li>
-            <li class="nav-item">
                 <a href="/parks/user/leaders"><button class="btn btn-default">Passport Leaders</button></a>
+            </li>
+            {% if this_user %}
+            <li class="nav-item">
+                <a href="/parks/user/visited"><button class="btn btn-default">Your Passport</button></a>
             </li>
             <li class="nav-item">
                 <a href="/account"><button class="btn btn-default">My Account</button></a>
@@ -162,6 +163,11 @@
             <li class="nav-item">
                 <a href="/logout"><button class="btn btn-default">Logout</button></a>
             </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="/"><button class="btn btn-default">Create Account</button></a>
+            </li>
+            {% endif %}
         </div>
     </span>
       </nav>
@@ -192,7 +198,9 @@
                         <div class="col-sm-12 text-center">
 
                             <h5 class="park_desc">{{this_park.desc}}</h5>
-                            {% if this_user not in this_park.visits.all %}
+                            {% if this_user == null %}
+                                <a href="/parks/{{this_park.id}}/visit/page"><button class="btn btn-primary">Login to Add to Passport</button></a>
+                            {% elif this_user not in this_park.visits.all %}
                                 <a href="/parks/{{this_park.id}}/visit/page"><button class="btn btn-primary">Mark as Visited!</button></a>
                             {% else %}
                                 <a href="/parks/user/{{this_park.id}}/removevisit"><button class="btn btn-success">Remove Stamp from Passport</button></a>
@@ -204,10 +212,17 @@
                 <div class="col-12 bg-light">
 
                     <div class="col p-5">
+                        {% if this_user %}
                         <iframe width="100%" height="450" frameborder="0" style="border:0"
                             src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key={{maps_key}}"
                             allowfullscreen>
                         </iframe>
+                        {% else %}
+                        <iframe width="100%" height="450" frameborder="0" style="border:0"
+                            src="https://www.google.com/maps/embed/v1/directions?origin={{this_park.name}}&destination={{this_park.name}}&key={{maps_key}}&zoom=6"
+                            allowfullscreen>
+                        </iframe>
+                        {% endif %}
                     </div>
                     <div class="col p-3">
                         <div class="app">

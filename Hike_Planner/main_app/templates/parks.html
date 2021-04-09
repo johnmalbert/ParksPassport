@@ -87,29 +87,35 @@
             <a class="navbar-brand">Welcome, Ranger {{this_user.first_name}}</a>
         </div>
         <span class="navbar-text">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a href="/parks"><button class="btn btn-default">Select a Park</button></a>
-            </li>
-            <li class="nav-item">
-                <a href="/parks/random"><button class="btn btn-default">Random Park</button></a>
-            </li>
-            <li class="nav-item">
-                <a href="/parks/user/visited"><button class="btn btn-default">Your Passport</button></a>
-            </li>
-            <li class="nav-item">
-                <a href="/parks/user/leaders"><button class="btn btn-default">Passport Leaders</button></a>
-            </li>
-            <li class="nav-item">
-                <a href="/account"><button class="btn btn-default">My Account</button></a>
-            </li>
-            <li class="nav-item">
-                <a href="/logout"><button class="btn btn-default">Logout</button></a>
-            </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a href="/parks"><button class="btn btn-default">Select a Park</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/parks/random"><button class="btn btn-default">Random Park</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/parks/user/leaders"><button class="btn btn-default">Passport Leaders</button></a>
+                    </li>
+                    {% if this_user %}
+                    <li class="nav-item">
+                        <a href="/parks/user/visited"><button class="btn btn-default">Your Passport</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/account"><button class="btn btn-default">My Account</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout"><button class="btn btn-default">Logout</button></a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="/"><button class="btn btn-default">Create Account</button></a>
+                    </li>
+                    {% endif %}
         </div>
     </span>
       </nav>
@@ -193,7 +199,10 @@
                         <h5 style="text-align: center; font-size: 1rem; padding: 10px;">{{park.name}}</h5>
                     </a>
                     <div class="col text-center p-2">
-                        {% if this_user not in park.visits.all %}
+                        {% if this_user == null %}
+                            <a href="/"><button class="btn btn-primary"
+                            style="text-align: center;">Login to Create Passport</button></a>
+                        {% elif this_user not in park.visits.all %}
                         <a href="/parks/{{park.id}}/visit"><button class="btn btn-primary"
                             style="text-align: center;">Mark as Visited</button></a>
                         {% else %}
