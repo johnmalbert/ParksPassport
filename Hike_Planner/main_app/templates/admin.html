@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Parks Passport</title>
+    <link rel="shortcut icon" href="https://png.pngtree.com/png-clipart/20200224/original/pngtree-men-hiking-hat-icon-cartoon-style-png-image_5208389.jpg"/>
+    {% load static %}
+    <script src="https://use.fontawesome.com/fe0b1ed089.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+    <script>
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <style>
+        img {
+            height: 100%;
+            margin: auto;
+            display: block;
+        }
+
+        .icon {
+            height: 50px;
+        }
+
+        .park_photo {
+            width: 100%;
+            max-height: 40rem;
+        }
+
+        .link {
+            color: #007bff;
+            font-size: 20px;
+        }
+        .app {
+            background-color: #267433;
+            color: #fff;
+            margin: 10vh auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .app h1 {
+            font-size: 5em;
+            padding: 10px;
+            margin: auto;
+            font-weight: 300;
+        }
+
+        .app h2 {
+            font-weight: 300;
+            letter-spacing: 5px;
+        }
+
+        h5 {
+            color: #267433;
+            text-align: justify;
+        }
+
+        .banner_img {
+            max-height: 4rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .park_img {
+            max-height: 12rem;
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light justify-content-between">
+        <div>
+            <img class="banner_img" src="{% static 'nps.png' %}" alt="NPS">
+            <a class="navbar-brand">Welcome, Ranger {{this_user.first_name}}</a>
+        </div>
+        <span class="navbar-text">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a href="/parks"><button class="btn btn-default">Select a Park</button></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/parks/random"><button class="btn btn-default">Random Park</button></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/parks/user/leaders"><button class="btn btn-default">Passport Leaders</button></a>
+                </li>
+                {% if this_user %}
+                <li class="nav-item">
+                    <a href="/parks/user/visited"><button class="btn btn-default">Your Passport</button></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/account"><button class="btn btn-default">My Account</button></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/logout"><button class="btn btn-default">Logout</button></a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="/"><button class="btn btn-default">Create Account</button></a>
+                </li>
+                {% endif %}
+        </div>
+    </span>
+      </nav>
+    <main>
+        <div class="container-fluid p-3">
+            <div class="card text-center">
+                <div class="card-header">
+                    <div class="shadow rounded" style="background-color: #e6e6e6">
+                        <h1 style="text-align: center; color: #267433; padding: 2rem; font-size: 3vw; text-shadow: 1px 1px #5f5f5f;">PASSPORT RECORD HOLDERS</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="background-color: #f1f4f8">
+                <table class="table table-hover table-striped table-light text-center m-5">
+                        <thead>
+                            <tr>
+                                <th scope="col">Rank</th>
+                                <th scope="col">Ranger Name</th>
+                                <th scope="col">Passport Stamps</th>
+                                <th scope="col">Home Zipcode</th>
+                                <th scope=col>Link to Passport</th>
+                                <th scope=col>Delete User?</th>
+                            </tr>
+                        </thead>          
+                        <tbody>
+                        {% for user in all_users %}
+                            <tr>
+                                    <th scope="row">#{{ forloop.counter }}</th>
+                                    <td>{{user.first_name}} {{user.last_name}}</td>
+                                    <td>{{user.visited_parks.all.count}}</td>
+                                    <td>{{user.zipcode}}</td>
+                                    <th scope=col><a href="/user/{{user.id}}/passport">View Passport</a></th>
+                                    <td><a href="/admin/deleteuser/{{user.id}}"><button class="btn btn-danger">DELETE USER</button></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>          
+                </table>
+            </div>
+        </div>
+        </div>
+    </main>
+    <div class="container-fluid">
+        <div class="card text-center">
+            <div class="card-header">
+                <button class="btn btn-default" onclick="topFunction()" btn-default title="Go to top">Return to Top</button>
+            </div>
+            <div class="card-body">
+                <h6 class="card-title">Created by John Albert</h6>
+                <p class="card-text">Find out more about me...</p>
+                <a class="link" href="https://www.github.com/johnmalbert" style="color: black;"><i class="fa fa-github"
+                        aria-hidden="true"> </i>&nbsp  &nbsp</a>
+                <a class="link" href="https://www.linkedin.com/in/john-m-albert/"><i class="fa fa-linkedin"
+                        aria-hidden="true"> </i>&nbsp  &nbsp</a>
+                <a class="link" href="https://www.instagram.com/chasethealberts" style="color: rgb(255, 60, 0)"><i class="fa fa-instagram"
+                        aria-hidden="true"> </i>&nbsp  &nbsp</a>
+            </div>
+            <div class="card-footer text-muted">
+                Full Stack Developer
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

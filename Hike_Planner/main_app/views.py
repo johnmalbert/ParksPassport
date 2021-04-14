@@ -361,6 +361,12 @@ def create_parks(request):
         except: 
             img_url3 = park_data['data'][0]['images'][0]['url']
             img3_desc = park_data['data'][0]['fullName']
+        try:
+            img_url4 = park_data['data'][0]['images'][3]['url']
+            img4_desc = park_data['data'][0]['images'][3]['title']
+        except: 
+            img_url4 = park_data['data'][0]['images'][0]['url']
+            img4_desc = park_data['data'][0]['fullName']
         Park.objects.create(
             name = parkname,
             url = park_data['data'][0]['url'],
@@ -370,9 +376,11 @@ def create_parks(request):
             img_url = park_data['data'][0]['images'][0]['url'],
             img_url2 = img_url2,
             img_url3 = img_url3,
+            img_url4 = img_url4,
             img1_desc = park_data['data'][0]['images'][0]['title'],
             img2_desc = img2_desc,
             img3_desc = img3_desc,
+            img4_desc = img4_desc,
             parkCode = user_str
         )
     # Fix Haleakala name   
@@ -436,3 +444,25 @@ def allparks_guest(request):
         "all_parks" : allparks,
     }
     return render(request, "parks.html", context)
+
+def admin(request):
+    try:
+        request.session['userid']
+    except: 
+        return redirect('/')
+    if (request.session['userid']) != 1:
+        return redirect('/parks')
+    all_users = User.objects.annotate(cc=Count('visited_parks')).order_by('-cc')
+    context = {
+        "all_users" : all_users,
+        "this_user" : User.objects.get(id=request.session['userid']),
+    }
+    return render(request, "admin.html", context)
+
+def delete_user(request, user_id):
+    print(User.objects.get(id=user_id))
+    if (request.session['userid']) != 1:
+        return redirect('/parks')
+    user_to_del = User.objects.get(id=user_id)
+    user_to_del.delete()
+    return redirect("/admin")

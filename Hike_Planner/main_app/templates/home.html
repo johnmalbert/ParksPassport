@@ -36,6 +36,12 @@
             $("#park_photo3").click(function(){
                 $("#park_photo3").hide();
                 $("#park_photo3_capt").hide();
+                $("#park_photo4").fadeIn(1000);
+                $("#park_photo4_capt").fadeIn(1000);
+            })
+            $("#park_photo4").click(function(){
+                $("#park_photo4").hide();
+                $("#park_photo4_capt").hide();
                 $("#park_photo").fadeIn(1000);
                 $("#park_photo_capt").fadeIn(1000);
             })
@@ -77,6 +83,18 @@
             display: none;
         }
         #park_photo3_capt{
+            color: #267433;
+            text-align: center;
+            font-size: 2vw;
+            display: none;
+        }
+        #park_photo4{
+            width: 75%;
+            height: auto;
+            cursor: pointer;
+            padding: 1rem;
+        }
+        #park_photo4_capt{
             color: #267433;
             text-align: center;
             font-size: 2vw;
@@ -186,9 +204,11 @@
                     <img id="park_photo" src="{{this_park.img_url}}" alt="image from site">
                     <img id="park_photo2" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
                     <img id="park_photo3" src="{{this_park.img_url3}}" alt="image from site" style="display: none;">
+                    <img id="park_photo4" src="{{this_park.img_url4}}" alt="image from site" style="display: none;">
                     <p id="park_photo_capt">Photo: {{this_park.img1_desc}}</p>
                     <p id="park_photo2_capt">Photo: {{this_park.img2_desc}}</p>
                     <p id="park_photo3_capt">Photo: {{this_park.img3_desc}}</p>
+                    <p id="park_photo4_capt">Photo: {{this_park.img4_desc}}</p>
                     <div class="col text-center">
                         <a href="/parks/{{this_park.id|add:'-1'}}"><button class="btn btn-success">Previous Park</button></a>
                         <a href="{{this_park.url}}"><button class="btn btn-primary">More Information at NPS.com</button></a>

@@ -27,5 +27,7 @@ urlpatterns = [
     path('parks/user/<int:number>/removevisit/home', views.remove_visit),
     path('parks/game', views.parks_game),
     path('parks/game/<int:winner>/<int:loser>', views.rank_park),
-    path('parks/ranked', views.display_ranked_parks)
+    path('parks/ranked', views.display_ranked_parks),
+    path('admin', views.admin),
+    path('admin/deleteuser/<int:user_id>', views.delete_user)
 ]
