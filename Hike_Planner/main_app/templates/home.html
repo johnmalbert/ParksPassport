@@ -106,20 +106,20 @@
         .app{
             background-color: #267433;
             color:#fff;
-            margin: 10vh auto;
+            margin: 0vh auto;
             border-radius: 5px;
             box-shadow: 0 5px 5px rgba(0,0,0,0.3);
             text-align: center;
-            padding: 10vh;
+            padding: 1vh;
         }
         .app h1{
-            font-size: 5em;
+            font-size: 2em;
             padding:10px;
             margin: auto;
             font-weight: 300;
         }
         .app h2{
-            font-weight: 300;
+            font-weight: 100;
             letter-spacing: 5px;
             padding-bottom: 1rem;
         }
@@ -201,23 +201,24 @@
                             </div>
                         </div>
                     </div>
-                    <img id="park_photo" src="{{this_park.img_url}}" alt="image from site">
-                    <img id="park_photo2" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
-                    <img id="park_photo3" src="{{this_park.img_url3}}" alt="image from site" style="display: none;">
-                    <img id="park_photo4" src="{{this_park.img_url4}}" alt="image from site" style="display: none;">
-                    <p id="park_photo_capt">Photo: {{this_park.img1_desc}}</p>
-                    <p id="park_photo2_capt">Photo: {{this_park.img2_desc}}</p>
-                    <p id="park_photo3_capt">Photo: {{this_park.img3_desc}}</p>
-                    <p id="park_photo4_capt">Photo: {{this_park.img4_desc}}</p>
+                        <div class="col-10 m-auto">
+                            <img id="park_photo" src="{{this_park.img_url}}" alt="image from site">
+                            <img id="park_photo2" src="{{this_park.img_url2}}" alt="image from site" style="display: none;">
+                            <img id="park_photo3" src="{{this_park.img_url3}}" alt="image from site" style="display: none;">
+                            <img id="park_photo4" src="{{this_park.img_url4}}" alt="image from site" style="display: none;">
+                            <p id="park_photo_capt">Photo: {{this_park.img1_desc}}</p>
+                            <p id="park_photo2_capt">Photo: {{this_park.img2_desc}}</p>
+                            <p id="park_photo3_capt">Photo: {{this_park.img3_desc}}</p>
+                            <p id="park_photo4_capt">Photo: {{this_park.img4_desc}}</p>
+                        </div>
                     <div class="col text-center">
                         <a href="/parks/{{this_park.id|add:'-1'}}"><button class="btn btn-success">Previous Park</button></a>
                         <a href="{{this_park.url}}"><button class="btn btn-primary">More Information at NPS.com</button></a>
                         <a href="/parks/{{this_park.id|add:'1'}}"><button class="btn btn-success">Next Park</button></a>
                     </div><div class="col text-center p-3">
                     <div class="row border p-5">
-                        <div class="col-sm-12 text-center">
-
-                            <h5 class="park_desc">{{this_park.desc}}</h5>
+                        <div class="col-sm-12 text-center"> 
+                            <h5 class="park_desc">Park Description: <br> {{this_park.desc}}</h5>
                             {% if this_user == null %}
                                 <a href="/parks/{{this_park.id}}/visit/page"><button class="btn btn-primary">Login to Add to Passport</button></a>
                             {% elif this_user not in this_park.visits.all %}
@@ -230,10 +231,10 @@
                     </div>
                 </div>
                 <div class="col-12 bg-light">
-
-                    <div class="col p-5">
-                        {% if this_user %}
-                        <iframe width="100%" height="450" frameborder="0" style="border:0"
+                    <div class="row">
+                        <div class="col p-3">
+                            {% if this_user %}
+                            <iframe width="100%" height="450" frameborder="0" style="border:0"
                             src="https://www.google.com/maps/embed/v1/directions?origin={{this_user.zipcode}}&destination={{this_park.name}}&key={{maps_key}}"
                             allowfullscreen>
                         </iframe>
@@ -243,17 +244,18 @@
                             allowfullscreen>
                         </iframe>
                         {% endif %}
-                    </div>
-                    <div class="col p-3">
-                        <div class="app">
-                            <h1>{{this_park.name}} Conditions:</h1>
-                                <h1 id="temp-main">{{weather.park_temp}}F°</h1>
-                                <h1 id="condition">{{weather.park_cond}}</h1>
+                        </div>
+                        <div class="col p-3 max-height: 450px">
+                            <div class="app">
+                                <h1>{{this_park.name}} Conditions:</h1>
+                                <h2 id="temp-main">{{weather.park_temp}}F°</h2>
+                                <h2 id="condition">{{weather.park_cond}}</h2>
                                 <img id="weather_icon" src={{weather.icon}} alt="weather cond">
                                 <!-- <h2 id="condition">Sunrise: {{weather.sunrise}}</h2>
-                                <h2 id="condition">Sunset: {{weather.sunset}}</h2> -->
+                                    <h2 id="condition">Sunset: {{weather.sunset}}</h2> -->
                                 <h2 id="condition">Daily High: {{weather.max}}F°</h2>
                                 <h2 id="condition">Daily Low: {{weather.min}}F°</h2>
+                            </div>
                         </div>
                     </div>
                 </div>

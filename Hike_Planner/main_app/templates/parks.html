@@ -19,6 +19,61 @@
             document.documentElement.scrollTop = 0;
         }
     </script>
+    <script>
+        $(document).ready(function() {
+            // Attach event listener to "Mark as Visited" button
+            $(".mark-visited-btn").on("click", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                var btnId = $(this).attr("id"); // Get the ID of the clicked button
+                var parkId = btnId.split("-").pop(); // Extract the park ID from the button ID
+                var btnElement = $(this); // Store the button element for later use
+                
+                $(this).removeClass("btn-primary").addClass("btn-success");
+                // Send AJAX request to mark park as visited
+                $.ajax({
+                    url: "/parks/" + parkId + "/visit",
+                    type: "GET",
+                    success: function(response) {
+                        // Handle success response, e.g., update UI
+                        btnElement.text("Added to Passport!");
+                        btnElement.prop("disabled", true); 
+                        console.log("Park marked as visited:", response);
+                    },
+                    error: function(error) {
+                        // Handle error response, e.g., show error message
+                        console.error("Error marking park as visited:", error);
+                    }
+                });
+            });
+        });
+        $(document).ready(function() {
+            $(".mark-removed-btn").on("click", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                var btnId = $(this).attr("id"); // Get the ID of the clicked button
+                console.log(btnId);
+                var parkId = btnId.split("-").pop(); // Extract the park ID from the button ID
+                var btnElement = $(this); // Store the button element for later use
+
+                console.log(btnId)
+                $(this).removeClass("btn-success").addClass("btn-primary");
+                $.ajax({
+                    url: "/parks/user/" + parkId + "/removevisit",
+                    type: "GET",
+                    success: function(response) {
+                        // Handle success response, e.g., update UI
+                        btnElement.text("Removed from Passport");
+                        btnElement.prop("disabled", true); 
+                        console.log("Page removed from passport", response);
+                    },
+                    error: function(error) {
+                        // Handle error response, e.g., show error message
+                        btnElement.text("Didn't work...")
+                        console.error("Error marking park as removed:", error);
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         img {
             height: 100%;
@@ -129,73 +184,17 @@
                 </div>
             </div>
             <div class="row mt-2" style="background-color: #f1f4f8">
+                <div class="col-md-12 text-right">
+                    <form method="GET" action="{% url 'all_parks' %}">
+                        {{ search_form }}
+                        <input class="col-md-2 text-left" type="search" name="search_query" class="form-control" id="exampleInputEmail1" placeholder="Search for park">
+                        <button type="submit" class="btn btn-primary mx-auto">Search</button>
+                    </form>
+                </div>
                 {% for park in all_parks %}
                 <div class="col-md-3 p-4" style="height: 22rem;">
                     <a href="/parks/{{park.id}}">
-                        {% if park.parkCode == "acad" %}<img class="park_img" src="{% static 'acad.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "arch" %}<img class="park_img" src="{% static 'arch.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "badl" %}<img class="park_img" src="{% static 'badl.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "bibe" %}<img class="park_img" src="{% static 'bibe.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "bisc" %}<img class="park_img" src="{% static 'bisc.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "blca" %}<img class="park_img" src="{% static 'blca.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "brca" %}<img class="park_img" src="{% static 'brca.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "cany" %}<img class="park_img" src="{% static 'cany.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "care" %}<img class="park_img" src="{% static 'care.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "cave" %}<img class="park_img" src="{% static 'cave.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "chis" %}<img class="park_img" src="{% static 'chis.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "cong" %}<img class="park_img" src="{% static 'cong.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "crla" %}<img class="park_img" src="{% static 'crla.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "cuva" %}<img class="park_img" src="{% static 'cuva.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "deva" %}<img class="park_img" src="{% static 'deva.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "dena" %}<img class="park_img" src="{% static 'dena.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "drto" %}<img class="park_img" src="{% static 'drto.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "ever" %}<img class="park_img" src="{% static 'ever.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "gaar" %}<img class="park_img" src="{% static 'gaar.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "glac" %}<img class="park_img" src="{% static 'glac.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "glac" %}<img class="park_img" src="{% static 'glac.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "glba" %}<img class="park_img" src="{% static 'glba.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "grca" %}<img class="park_img" src="{% static 'grca.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "grte" %}<img class="park_img" src="{% static 'grte.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "grba" %}<img class="park_img" src="{% static 'grba.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "grsa" %}<img class="park_img" src="{% static 'grsa.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "grsm" %}<img class="park_img" src="{% static 'grsm.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "gumo" %}<img class="park_img" src="{% static 'gumo.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "hale" %}<img class="park_img" src="{% static 'hale.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "havo" %}<img class="park_img" src="{% static 'havo.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "hosp" %}<img class="park_img" src="{% static 'hosp.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "indu" %}<img class="park_img" src="{% static 'indu.jpg' %}" alt="National Park Image">
-                        {% elif park.parkCode == "isro" %}<img class="park_img" src="{% static 'isro.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "jotr" %}<img class="park_img" src="{% static 'jotr.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "katm" %}<img class="park_img" src="{% static 'katm.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "kefj" %}<img class="park_img" src="{% static 'kefj.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "kova" %}<img class="park_img" src="{% static 'kova.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "lacl" %}<img class="park_img" src="{% static 'lacl.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "lavo" %}<img class="park_img" src="{% static 'lavo.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "maca" %}<img class="park_img" src="{% static 'maca.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "meve" %}<img class="park_img" src="{% static 'meve.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "mora" %}<img class="park_img" src="{% static 'mora.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "neri" %}<img class="park_img" src="{% static 'neri.jpg' %}" alt="National Park Image">
-                        {% elif park.parkCode == "noca" %}<img class="park_img" src="{% static 'noca.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "olym" %}<img class="park_img" src="{% static 'olym.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "pefo" %}<img class="park_img" src="{% static 'pefo.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "pinn" %}<img class="park_img" src="{% static 'pinn.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "redw" %}<img class="park_img" src="{% static 'redw.jpg' %}" alt="National Park Image">
-                        {% elif park.parkCode == "romo" %}<img class="park_img" src="{% static 'romo.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "sagu" %}<img class="park_img" src="{% static 'sagu.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "seki" %}<img class="park_img" src="{% static 'seki.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "shen" %}<img class="park_img" src="{% static 'shen.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "thro" %}<img class="park_img" src="{% static 'thro.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "viis" %}<img class="park_img" src="{% static 'viis.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "voya" %}<img class="park_img" src="{% static 'voya.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "whsa" %}<img class="park_img" src="{% static 'whsa.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "wica" %}<img class="park_img" src="{% static 'wica.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "wrst" %}<img class="park_img" src="{% static 'wrst.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "yell" %}<img class="park_img" src="{% static 'yell.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "yose" %}<img class="park_img" src="{% static 'yose.png' %}" alt="National Park Image">
-                        {% elif park.parkCode == "zion" %}<img class="park_img" src="{% static 'zion.png' %}" alt="National Park Image">
-                        {% else %}
-                        <img class="park_img" src="{% static 'nps.png' %}" alt="National Park Image">
-                        {% endif %}
+                        <img class="park_img" src="{% static park.parkCode|lower|add:'.png' %}" alt="National Park Image">
                         <h5 style="text-align: center; font-size: 1rem; padding: 10px;">{{park.name}}</h5>
                     </a>
                     <div class="col text-center p-2">
@@ -203,10 +202,12 @@
                             <a href="/"><button class="btn btn-primary"
                             style="text-align: center;">Login to Create Passport</button></a>
                         {% elif this_user not in park.visits.all %}
-                        <a href="/parks/{{park.id}}/visit"><button class="btn btn-primary"
-                            style="text-align: center;">Mark as Visited</button></a>
+                        <a href="/parks/{{park.id}}/visit">
+                            <button class="btn btn-primary mark-visited-btn" id="mark-visited-btn-{{park.id}}"
+                                style="text-align: center;">Mark as visited!</button>
+                        </a>
                         {% else %}
-                        <a href="parks/user/{{park.id}}/removevisit/home"><button class="btn btn-success">Remove Visit from Passport</button></a>
+                        <a href="parks/user/{{park.id}}/removevisit/home" ><button class="btn btn-success mark-removed-btn" id="mark-removed-btn-{{park.id}}">Remove Visit from Passport</button></a>
                         {% endif %}
                     </div>
                 </div>

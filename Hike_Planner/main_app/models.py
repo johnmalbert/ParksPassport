@@ -11,10 +11,10 @@ class UserManager(models.Manager):
             errors['first_name'] = "First name must be at least 2 alphabetical characters."
         if(len(postData['last_name']) < 2) or not postData['last_name'].isalpha():
             errors['last_name'] = "Last name must be at least 2 alphabetical characters"
-        if(len(postData['password']) < 8) or len(postData['confirm']) < 8:
-            errors['password'] = "Password must be at least 8 characters"
-        if postData['password'].isalpha():
-            errors['letters'] = "Password must contain 1 or more numbers or special characters"
+        # if(len(postData['password']) < 8) or len(postData['confirm']) < 8:
+        #     errors['password'] = "Password must be at least 8 characters"
+        # if postData['password'].isalpha():
+        #     errors['letters'] = "Password must contain 1 or more numbers or special characters"
         if postData['password'] != postData['confirm']:
             errors['match_pw'] = "Confirmation Password doesn't match."
         if User.objects.filter(email=postData['email'].lower()):

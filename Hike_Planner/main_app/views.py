@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import User, Park, Rating
 from django.contrib import messages
+from .forms import ParkSearchForm
 import bcrypt
 import requests
 import math
 from datetime import datetime
 from django.db.models import Count
 import random
+import os
+import openai
 import config
 
 # Create your views here.
@@ -96,6 +99,23 @@ def park_by_number(request, number):
     weather['min'] = low
     icon = curr['weather'][0]['icon']
     weather['icon'] = f"http://openweathermap.org/img/wn/{icon}@2x.png"
+
+    # make call to OpenAI
+    openai.api_key = "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"
+
+    # # Call OpenAI's API
+    # reasons_to_visit = openai.Completion.create(
+    #     model="text-davinci-003",
+    #     prompt=f"You are a park ranger. Give the top 5 hikes and the distances in this park: {this_park.name} I want the reasons in a numbered list. \n",
+    #     temperature=0.7,
+    #     max_tokens=150,
+    #     top_p=1,
+    #     frequency_penalty=0,
+    #     presence_penalty=0
+    # )
+    # print(reasons_to_visit)
+    # print(reasons_to_visit.choices[0].text)
+    # this_park.desc = reasons_to_visit.choices[0].text
     try:
         this_user = User.objects.get(id = request.session['userid'])
     except:
@@ -132,31 +152,118 @@ def parks(request):
     return render(request, "parks.html", context)
 
 def allparks(request):
-    allparks = Park.objects.all()
+    all_parks = Park.objects.all()
+
+    # Handle search
+    search_query = request.GET.get('search_query')
+    if search_query:
+        all_parks = all_parks.filter(name__icontains=search_query)
+
     try:
         request.session['userid']
     except: 
         return redirect('/parks/allparks/guest')
     request.session['allparks'] = False
-    context = {
-        "all_parks" : allparks,
-        "this_user" : User.objects.get(id=request.session['userid'])
+    park_codes = { 
+        "acad": "acad.png",
+        "arch": "arch.png",
+        "badl": "badl.png",
+        "bisc": "bisc.png",
+        "blca": "blca.png",
+        "brca": "brca.png",
+        "cany": "cany.png",
+        "cave": "cave.png",
+        "chis": "chis.png",
+        "cong": "cong.png",
+        "crla": "crla.png",
+        "cuva": "cuva.png",
+        "dena": "dena.png",
+        "deva": "deva.png",
+        "drto": "drto.png",
+        "ever": "ever.png",
+        "gaar": "gaar.png",
+        "glac": "glac.png",
+        "glba": "glba.png",
+        "grba": "grba.png",
+        "grca": "grca.png",
+        "gumo": "gumo.png",
+        "hale": "hale.png",
+        "havo": "havo.png",
+        "hosp": "hosp.png",
+        "isro": "isro.png",
+        "jotr": "jotr.png",
+        "katm": "katm.png",
+        "kefj": "kefj.png",
+        "kica": "kica.png",
+        "kova": "kova.png",
+        "lavo": "lavo.png",
+        "maca": "maca.png",
+        "meve": "meve.png",
+        "mora": "mora.png",
+        "noca": "noca.png",
+        "olym": "olym.png",
+        "pefo": "pefo.png",
+        "pinn": "pinn.png",
+        "redw": "redw.png",
+        "romo": "romo.png",
+        "sagu": "sagu.png",
+        "seki": "seki.png",
+        "shen": "shen.png",
+        "thro": "thro.png",
+        "viis": "viis.png",
+        "voja": "voja.png",
+        "voyu": "voyu.png",
+        "wica": "wica.png",
+        "wrst": "wrst.png",
+        "yell": "yell.png",
+        "yose": "yose.png",
+        "zion": "zion.png",
     }
-    return render(request, "parks.html", context)
+    context = {
+        "all_parks": all_parks,
+        "this_user": User.objects.get(id=request.session['userid']),
+        "park_codes": park_codes,
+        # 'search_form': ParkSearchForm()
+    }
+    # return render(request, "parks.html", context)
+    return render(request, 'parks.html', context)
 
 def logout(request):
     del request.session['userid']
     return redirect('/userlogin')
 
 def account(request):
+    print(request.POST.get('input'))
+    if request.method == 'POST':
+        user_input = request.POST.get('input')
+        headers = {'Authorization': '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'}
+        data = {
+            'prompt': user_input,
+            'temperature': 0.5,
+            'max_tokens': 60,
+        }
+        print(headers)
+        # response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, json=data)
+    #     if response.status_code == 200:
+    #         chat_response = response.json()['choices'][0]['text']
+    #     else:
+    #         print(response)
+    #         chat_response = "I'm sorry, I couldn't understand you. Can you please rephrase?"
+    # else:
+    #     chat_response = "Hello! How can I help you today?"
+        
     try:
         request.session['userid']
     except: 
         return redirect('/')
     context = {
-        "this_user" : User.objects.get(id=request.session['userid'])
+        "this_user" : User.objects.get(id=request.session['userid']),
+        'chat_response': chat_response
     }
+    print(chat_response)
     return render(request, "my_account.html", context)
+
+
 
 def update_account(request):
     print("update the account.")
@@ -466,3 +573,59 @@ def delete_user(request, user_id):
     user_to_del = User.objects.get(id=user_id)
     user_to_del.delete()
     return redirect("/admin")
+
+park_codes = {
+    "acad": "acad.png",
+    "arch": "arch.png",
+    "badl": "badl.png",
+    "bisc": "bisc.png",
+    "blca": "blca.png",
+    "brca": "brca.png",
+    "cany": "cany.png",
+    "cave": "cave.png",
+    "chis": "chis.png",
+    "cong": "cong.png",
+    "crla": "crla.png",
+    "cuva": "cuva.png",
+    "dena": "dena.png",
+    "deva": "deva.png",
+    "drto": "drto.png",
+    "ever": "ever.png",
+    "gaar": "gaar.png",
+    "glac": "glac.png",
+    "glba": "glba.png",
+    "grba": "grba.png",
+    "grca": "grca.png",
+    "gumo": "gumo.png",
+    "hale": "hale.png",
+    "havo": "havo.png",
+    "hosp": "hosp.png",
+    "isro": "isro.png",
+    "jotr": "jotr.png",
+    "katm": "katm.png",
+    "kefj": "kefj.png",
+    "kica": "kica.png",
+    "kova": "kova.png",
+    "lavo": "lavo.png",
+    "maca": "maca.png",
+    "meve": "meve.png",
+    "mora": "mora.png",
+    "noca": "noca.png",
+    "olym": "olym.png",
+    "pefo": "pefo.png",
+    "pinn": "pinn.png",
+    "redw": "redw.png",
+    "romo": "romo.png",
+    "sagu": "sagu.png",
+    "seki": "seki.png",
+    "shen": "shen.png",
+    "thro": "thro.png",
+    "viis": "viis.png",
+    "voja": "voja.png",
+    "voyu": "voyu.png",
+    "wica": "wica.png",
+    "wrst": "wrst.png",
+    "yell": "yell.png",
+    "yose": "yose.png",
+    "zion": "zion.png",
+}
