@@ -236,7 +236,7 @@ def account(request):
     print(request.POST.get('input'))
     if request.method == 'POST':
         user_input = request.POST.get('input')
-        headers = {'Authorization': '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'}
+        headers = {'Authorization': '<enter openai key>'}
         data = {
             'prompt': user_input,
             'temperature': 0.5,
